@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>20180331go-关于redis与mysql连接池的设计整理</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h3 id="toc_0">对golang中redis及mysql连接池的设计方案整理</h3>
+
+<h4 id="toc_1">1.前言</h4>
+
+<p>业务开发中，我们经常会用到mysql，redis等工具。场景大致如下： client发起http请求，server启动相应的进程/线程来处理该请求。若此过程涉及到与mysql,redis交互，则会建立相应的连接资源，而当进程结束后，此连接资源会被释放。若存在大量的请求时，如此频繁的建立与释放相应连接资源并不是一种好的方案，所以一些常用的工具库都涉及到连接池的概念。最近阅读了golang中<code>redis包</code>及<code>mysql包</code>中连接池设计的部分源码：</p>
+
+<ul>
+<li><code>redis源码包</code>：https://github.com/garyburd/redigo</li>
+<li><code>mysql源码包</code>：src/database/sql/sql.go(go内建类库)</li>
+</ul>
+
+<p>两种工具中的连接池设计都有其独到之处，下文将进行部分梳理。</p>
+
+<h4 id="toc_2">2.redis连接池设计方案</h4>
+
+<p><code>源代码文件:redigo/redis/pool.go</code></p>
+
+<p>redis连接池主要采用了<strong>条件变量</strong>的方案，当没有可用的连接资源时，程序会阻塞，直至已占用的连接资源释放掉，程序会继续执行。</p>
+
+<ul>
+<li>关于<strong>redis连接池结构体</strong>的设计:</li>
+</ul>
+
+<div><pre><code class="language-php">type Pool struct {
+    //获取redis连接资源的回调函数,用户实现该函数
+    Dial func() (Conn, error)
+
+    //检测连接池连接是否有效，无效则自动关闭连接,用户实现该函数
+    TestOnBorrow func(c Conn, t time.Time) error
+
+    // 最大空闲连接数,未使用的连接数
+    MaxIdle int
+
+    // 最大活跃连接数,已使用的连接数
+    MaxActive int
+
+    // 空闲连接数的超时时间
+    IdleTimeout time.Duration
+
+    
+    //调用Get()函数会使用一个新的连接，当建立的连接超过最大活跃连接数时，
+    //若wait为true,则Get()函数会进行阻塞等待
+    Wait bool
+
+    //mu互斥锁 用于保护以下定义的字段
+    mu     sync.Mutex
+    cond   *sync.Cond  //条件锁
+    closed bool        //连接池是否已关闭
+    active int         //当前实际活跃数
+
+    //空闲的连接数，双向链表结构，最后使用的连接资源的会插在链表头部
+    idle list.List
+}</code></pre></div>
+
+<ul>
+<li><strong>release()</strong>函数：释放连接池中的空闲连接资源</li>
+</ul>
+
+<div><pre><code class="language-none">// 减少活跃连接数,并发送条件信号
+func (p *Pool) release() {
+    p.active -= 1
+    if p.cond != nil {
+        p.cond.Signal() //尝试生成一个新的连接资源
+    }
+}</code></pre></div>
+
+<ul>
+<li><strong>get()</strong>函数：从redis连接池获取连接资源:</li>
+</ul>
+
+<div><pre><code class="language-none">func (p *Pool) get() (Conn, error) {
+    p.mu.Lock()
+
+    // 除去链表尾部的无效连接
+    //idle连接池为双向链表结构，维护常用的连接资源，新的连接资源会挂在链表头部
+    if timeout := p.IdleTimeout; timeout &gt; 0 {
+        for i, n := 0, p.idle.Len(); i &lt; n; i++ {
+            e := p.idle.Back()  //从链表尾部向前遍历
+            if e == nil {
+                break
+            }
+            ic := e.Value.(idleConn)
+            if ic.t.Add(timeout).After(nowFunc()) { //判断连接是否已过期
+                break  //存在未过期的连接资源
+            }
+            p.idle.Remove(e)//删除连接池中过期连接资源
+            p.release()
+            p.mu.Unlock()
+            ic.c.Close()
+            p.mu.Lock()
+        }
+    }
+
+    for {
+        // 方案1.尝试从连接池获取
+        for i, n := 0, p.idle.Len(); i &lt; n; i++ {
+            e := p.idle.Front() //优先从头部取出连接资源
+            if e == nil {
+                break
+            }
+            ic := e.Value.(idleConn)
+            p.idle.Remove(e)
+            test := p.TestOnBorrow
+            p.mu.Unlock()
+            if test == nil || test(ic.c, ic.t) == nil {
+                return ic.c, nil
+            }
+            ic.c.Close()
+            p.mu.Lock()
+            p.release()
+        }
+
+        // Check for pool closed before dialing a new connection.
+        if p.closed {
+            p.mu.Unlock()
+            return nil, errors.New(&quot;redigo: get on closed pool&quot;)
+        }
+
+        //方案2.尝试创建新的连接资源
+        if p.MaxActive == 0 || p.active &lt; p.MaxActive {
+            dial := p.Dial
+            p.active += 1
+            p.mu.Unlock()
+            c, err := dial()
+            if err != nil {
+                p.mu.Lock()
+                p.release()
+                p.mu.Unlock()
+                c = nil
+            }
+            return c, err
+        }
+
+        if !p.Wait {
+            p.mu.Unlock()
+            return nil, ErrPoolExhausted
+        }
+
+        if p.cond == nil {
+            p.cond = sync.NewCond(&amp;p.mu)
+        }
+        //方案3.当(方案1)连接池无空闲连接，或(方案2)活跃连接数超过最大值，则进行条件等待
+        p.cond.Wait()  //阻塞，接收到信号  p.cond.Signal() 则继续向下执行 
+    }
+}</code></pre></div>
+
+<ul>
+<li><strong>Close()</strong>函数：关闭连接资源</li>
+</ul>
+
+<div><pre><code class="language-none">func (pc *pooledConnection) Close() error {
+    c := pc.c
+    if _, ok := c.(errorConnection); ok {
+        return nil
+    }
+    pc.c = errorConnection{errConnClosed}
+
+    if pc.state&amp;internal.MultiState != 0 {
+        ...
+        ...
+    }
+    c.Do(&quot;&quot;)
+    pc.p.put(c, pc.state != 0) //尝试放入连接池
+    return nil
+}
+</code></pre></div>
+
+<ul>
+<li><strong>put()</strong>函数：尝试把连接资源再次放入连接池</li>
+</ul>
+
+<div><pre><code class="language-none">func (p *Pool) put(c Conn, forceClose bool) error {
+    err := c.Err()
+    p.mu.Lock()
+    if !p.closed &amp;&amp; err == nil &amp;&amp; !forceClose {
+        p.idle.PushFront(idleConn{t: nowFunc(), c: c})//放置在idle连接池头部
+        if p.idle.Len() &gt; p.MaxIdle {
+            //说明连接池处于空闲状态
+            c = p.idle.Remove(p.idle.Back()).(idleConn).c //若超出，则移去尾部
+        } else {
+            //说明连接池资源在使用中
+            c = nil  //若未超出,则尝试创建新的连接资源
+        }
+    }
+
+    if c == nil {
+        //判断条件变量, 并发送信号来使其他请求正常使用连接资源
+        if p.cond != nil {
+            p.cond.Signal() 
+        }
+        p.mu.Unlock()
+        return nil
+    }
+
+    p.release()
+    p.mu.Unlock()
+    return c.Close() //关闭尾部连接资源
+}</code></pre></div>
+
+<h4 id="toc_3">3.mysql连接池设计方案</h4>
+
+<p><code>源代码文件:src/database/sql/sql.go</code></p>
+
+<p>在了解mysql的连接池之前，可以先熟悉一下如下两篇文章：</p>
+
+<ul>
+<li>1.channle流水线的概念： <code>https://segmentfault.com/a/1190000006261218</code></li>
+<li>2.context模型：<code>https://segmentfault.com/a/1190000006744213</code></li>
+</ul>
+
+<p>在mysql连接池的设计中，采用了<strong>channel和context的方案</strong>。通过channel处理不同goroutine之间的通信；通过context来控制goroutine的生命周期，可以判断其父级goroutine是否已经执行结束，诸如以下代码：</p>
+
+<div><pre><code class="language-none">示例代码：
+func httpDo(ctx context.Context, req *http.Request, f func(*http.Response, error) error) error {
+    ...
+    ...
+    //启一个goroutine，去请求另一个server
+    go func() { c &lt;- f(client.Do(req)) }()
+
+    select {
+    //使用context模型，判断父级上下文是否已结束
+    //结束则取消请求
+    case &lt;-ctx.Done():
+        tr.CancelRequest(req)
+        &lt;-c // Wait for f to return.
+        return ctx.Err()
+    case err := &lt;-c:
+        return err
+    }
+}</code></pre></div>
+
+<p>mysql的连接池结构体设计如下:</p>
+
+<div><pre><code class="language-none">type DB struct {
+    driver driver.Driver
+    dsn    string
+    // numClosed is an atomic counter which represents a total number of
+    // closed connections. Stmt.openStmt checks it before cleaning closed
+    // connections in Stmt.css.
+    numClosed uint64
+
+    mu           sync.Mutex // protects following fields
+    freeConn     []*driverConn
+    connRequests map[uint64]chan connRequest
+    nextRequest  uint64 // Next key to use in connRequests.
+    numOpen      int    // number of opened and pending open connections
+    // Used to signal the need for new connections
+    // a goroutine running connectionOpener() reads on this chan and
+    // maybeOpenNewConnections sends on the chan (one send per needed connection)
+    // It is closed during db.Close(). The close tells the connectionOpener
+    // goroutine to exit.
+    openerCh    chan struct{}
+    closed      bool
+    dep         map[finalCloser]depSet
+    lastPut     map[*driverConn]string // stacktrace of last conn&#39;s put; debug only
+    maxIdle     int                    // zero means defaultMaxIdleConns; negative means 0
+    maxOpen     int                    // &lt;= 0 means unlimited
+    maxLifetime time.Duration          // maximum amount of time a connection may be reused
+    cleanerCh   chan struct{}
+}</code></pre></div>
+
+<p>server创建新的连接池时，执行了如下操作:</p>
+
+<ul>
+<li><strong>Open函数</strong></li>
+<li><em>connectionOpener函数</em></li>
+<li><em>openNewConnection函数</em></li>
+</ul>
+
+<div><pre><code class="language-none">func Open(driverName, dataSourceName string) (*DB, error) {
+    driversMu.RLock()
+    driveri, ok := drivers[driverName]
+    driversMu.RUnlock()
+    if !ok {
+        return nil, fmt.Errorf(&quot;sql: unknown driver %q (forgotten import?)&quot;, driverName)
+    }
+    db := &amp;DB{
+        driver:       driveri,
+        dsn:          dataSourceName,
+        openerCh:     make(chan struct{}, connectionRequestQueueSize),
+        lastPut:      make(map[*driverConn]string),
+        connRequests: make(map[uint64]chan connRequest),
+    }
+    //启动goroutine,通过channel来判断是否需要打开连接
+    go db.connectionOpener()
+    return db, nil
+}
+
+// Runs in a separate goroutine, opens new connections when requested.
+func (db *DB) connectionOpener() {
+    //监听channel里的数据流
+    for range db.openerCh {
+        db.openNewConnection()
+    }
+}
+
+// Open one new connection
+func (db *DB) openNewConnection() {
+    // maybeOpenNewConnctions has already executed db.numOpen++ before it sent
+    // on db.openerCh. This function must execute db.numOpen-- if the
+    // connection fails or is closed before returning.
+    ci, err := db.driver.Open(db.dsn)
+    db.mu.Lock()
+    defer db.mu.Unlock()
+    if db.closed {
+        if err == nil {
+            ci.Close()
+        }
+        db.numOpen--
+        return
+    }
+    if err != nil {
+        db.numOpen--
+        db.putConnDBLocked(nil, err)
+        //尝试再次打开新的连接资源
+        db.maybeOpenNewConnections()
+        return
+    }
+    dc := &amp;driverConn{
+        db:        db,
+        createdAt: nowFunc(),
+        ci:        ci,
+    }
+    //放入连接池并添加依赖
+    if db.putConnDBLocked(dc, err) {
+        db.addDepLocked(dc, dc)
+    } else {
+        db.numOpen--
+        ci.Close()
+    }
+}</code></pre></div>
+
+<ul>
+<li><strong>conn函数</strong>:用于client请求使用连接池资源</li>
+</ul>
+
+<div><pre><code class="language-none">
+// conn returns a newly-opened or cached *driverConn.
+func (db *DB) conn(ctx context.Context, strategy connReuseStrategy) (*driverConn, error) {
+    db.mu.Lock()
+    if db.closed {
+        db.mu.Unlock()
+        return nil, errDBClosed
+    }
+    // Check if the context is expired.
+    select {
+    default:
+    //父级goroutine退出，则直接返回
+    case &lt;-ctx.Done():
+        db.mu.Unlock()
+        return nil, ctx.Err()
+    }
+    lifetime := db.maxLifetime
+
+    // Prefer a free connection, if possible.
+    numFree := len(db.freeConn)
+    if strategy == cachedOrNewConn &amp;&amp; numFree &gt; 0 {
+        conn := db.freeConn[0]
+        //拷贝连接池长度
+        copy(db.freeConn, db.freeConn[1:])
+        db.freeConn = db.freeConn[:numFree-1]
+        conn.inUse = true
+        db.mu.Unlock()
+        if conn.expired(lifetime) {
+            conn.Close()
+            return nil, driver.ErrBadConn
+        }
+        return conn, nil
+    }
+
+    // Out of free connections or we were asked not to use one. If we&#39;re not
+    // allowed to open any more connections, make a request and wait.
+    if db.maxOpen &gt; 0 &amp;&amp; db.numOpen &gt;= db.maxOpen {
+        // Make the connRequest channel. It&#39;s buffered so that the
+        // connectionOpener doesn&#39;t block while waiting for the req to be read.
+        req := make(chan connRequest, 1)
+        reqKey := db.nextRequestKeyLocked()
+        db.connRequests[reqKey] = req
+        db.mu.Unlock()
+
+        // Timeout the connection request with the context.
+        select {
+        case &lt;-ctx.Done():
+            // Remove the connection request and ensure no value has been sent
+            // on it after removing.
+            db.mu.Lock()
+            delete(db.connRequests, reqKey)
+            db.mu.Unlock()
+            select {
+            default:
+            case ret, ok := &lt;-req:
+                if ok {
+                    db.putConn(ret.conn, ret.err)
+                }
+            }
+            return nil, ctx.Err()
+        case ret, ok := &lt;-req:
+            if !ok {
+                return nil, errDBClosed
+            }
+            if ret.err == nil &amp;&amp; ret.conn.expired(lifetime) {
+                ret.conn.Close()
+                return nil, driver.ErrBadConn
+            }
+            return ret.conn, ret.err
+        }
+    }
+
+    db.numOpen++ // optimistically
+    db.mu.Unlock()
+    ci, err := db.driver.Open(db.dsn)
+    if err != nil {
+        db.mu.Lock()
+        db.numOpen-- // correct for earlier optimism
+        db.maybeOpenNewConnections()
+        db.mu.Unlock()
+        return nil, err
+    }
+    db.mu.Lock()
+    dc := &amp;driverConn{
+        db:        db,
+        createdAt: nowFunc(),
+        ci:        ci,
+        inUse:     true,
+    }
+    db.addDepLocked(dc, dc)
+    db.mu.Unlock()
+    return dc, nil
+}
+</code></pre></div>
+
+<ul>
+<li><strong>putConnDBLocked()函数</strong>:把新的连接资源放入连接池或直接用于client请求</li>
+</ul>
+
+<div><pre><code class="language-none">// Satisfy a connRequest or put the driverConn in the idle pool and return true
+// or return false.
+// putConnDBLocked will satisfy a connRequest if there is one, or it will
+// return the *driverConn to the freeConn list if err == nil and the idle
+// connection limit will not be exceeded.
+// If err != nil, the value of dc is ignored.
+// If err == nil, then dc must not equal nil.
+// If a connRequest was fulfilled or the *driverConn was placed in the
+// freeConn list, then true is returned, otherwise false is returned.
+func (db *DB) putConnDBLocked(dc *driverConn, err error) bool {
+    if db.closed {
+        return false
+    }
+    if db.maxOpen &gt; 0 &amp;&amp; db.numOpen &gt; db.maxOpen {
+        return false
+    }
+    if c := len(db.connRequests); c &gt; 0 {
+        var req chan connRequest
+        var reqKey uint64
+        for reqKey, req = range db.connRequests {
+            break
+        }
+        delete(db.connRequests, reqKey) // Remove from pending requests.
+        if err == nil {
+            dc.inUse = true
+        }
+        req &lt;- connRequest{
+            conn: dc,
+            err:  err,
+        }
+        return true
+    } else if err == nil &amp;&amp; !db.closed &amp;&amp; db.maxIdleConnsLocked() &gt; len(db.freeConn) {
+        db.freeConn = append(db.freeConn, dc)
+        db.startCleanerLocked()
+        return true
+    }
+    return false
+}</code></pre></div>
+
+<ul>
+<li><strong>maybeOpenNewConnections()函数</strong>：建立新的连接资源失败后，重新尝试</li>
+</ul>
+
+<div><pre><code class="language-none">// Assumes db.mu is locked.
+// If there are connRequests and the connection limit hasn&#39;t been reached,
+// then tell the connectionOpener to open new connections.
+func (db *DB) maybeOpenNewConnections() {
+    numRequests := len(db.connRequests)
+    if db.maxOpen &gt; 0 {
+        numCanOpen := db.maxOpen - db.numOpen
+        if numRequests &gt; numCanOpen {
+            numRequests = numCanOpen
+        }
+    }
+    for numRequests &gt; 0 {
+        db.numOpen++ // optimistically
+        numRequests--
+        if db.closed {
+            return
+        }
+        db.openerCh &lt;- struct{}{}
+    }
+}</code></pre></div>
+
+<p>mysql连接池的运行原理大致如下：</p>
+
+<ul>
+<li>1.server创建连接池: <strong>调用Open函数</strong>
+
+<ul>
+<li>启用goroutine监听<em>channelA</em>数据流,若存在数据流时，则创建新的连接并放入连接池<strong>putConnDBLocked函数</strong></li>
+</ul></li>
+<li>2.client请求使用连接资源: <strong>调用conn函数</strong>
+
+<ul>
+<li>若请求连接资源失败，则<strong>调用maybeOpenNewConnections函数</strong></li>
+</ul></li>
+<li>3.<strong>maybeOpenNewConnections函数</strong>通过<em>channelA</em>与步骤1中的goroutine进行通信</li>
+<li>4.<strong>putConnDBLocked函数</strong>通过<em>requestChannel</em>与<strong>conn函数通信</strong></li>
+</ul>
+
+<h4 id="toc_4">4.小结</h4>
+
+<p>redis连接池和MySQL连接池采用了不同的设计方案，在学习这两种设计方案时，可以加深我们对go的理解和运用，而且这两种设计在编码实现上十分优雅，值得认真研读几遍。</p>
+
+
+
+
+</body>
+
+</html>

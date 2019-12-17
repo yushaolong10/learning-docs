@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <title>关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence</title>
+    
+        
+
+                        
+    
+                        
+    
+
+                
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE,chrome=IE7">
+
+<meta id="confluence-context-path" name="confluence-context-path" content="">
+<meta id="confluence-base-url" name="confluence-base-url" content="http://la.knowbox.cn:8090">
+
+<meta id="atlassian-token" name="atlassian-token" content="55925c099c1bdcc106a0765062240739c8ece748">
+
+<meta id="confluence-space-key" name="confluence-space-key" content="techZyhz">
+<script type="text/javascript">
+        var contextPath = '';
+</script>
+
+    
+
+<!-- include system css resources -->
+
+
+    <link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch.css" media="all">
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(1).css" media="print">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/39/_/download/superbatch/css/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/39/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+8" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/39/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(2).css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/70f6d025b64de5008ccd042576cd8d90/_/download/contextbatch/css/page/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(3).css" media="all">
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(4).css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/f85dd4531014e72286a59f4c6f892546/_/download/contextbatch/css/atl.confluence.plugins.pagetree-desktop,main,viewcontent,atl.general,plugin.quick.comment.pre/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.confluence.plugins.confluence-space-ia_spacesidebar.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/6.3.8/_/download/batch/com.atlassian.confluence.plugins.confluence-space-ia:spacesidebar/com.atlassian.confluence.plugins.confluence-space-ia:spacesidebar.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.confluence.plugins.confluence-highlight-actions_highlighting-experiment-resources.css" media="all">
+<!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1.3/_/download/batch/com.atlassian.confluence.plugins.confluence-highlight-actions:highlighting-experiment-resources/com.atlassian.confluence.plugins.confluence-highlight-actions:highlighting-experiment-resources.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.support.stp_stp-license-status-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/confluence.extra.jira_web-resources-adg.css" media="all">
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/colors.css" media="all">
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/default-theme.css" media="all">
+
+<!-- end system css resources -->
+
+    <meta name="confluence-request-time" content="1540718984418">
+        
+    
+        
+            <meta name="ajs-is-confluence-admin" content="true">
+            <meta name="ajs-connection-timeout" content="10000">
+            <meta name="ajs-use-keyboard-shortcuts" content="true">
+            <meta name="ajs-keyboardshortcut-hash" content="946c4213c0217ffb1df287239cc4e31d">
+            <style>.ia-fixed-sidebar, .ia-splitter-left {width: 285px;}.theme-default .ia-splitter #main {margin-left: 285px;}.ia-fixed-sidebar {visibility: hidden;}</style>
+            
+
+    
+            
+    
+    
+            <meta name="ajs-page-id" content="4558051">
+            <meta name="ajs-content-type" content="page">
+            <meta name="ajs-page-title" content="关于redis负载报警的追查">
+            <meta name="ajs-parent-page-title" content="技术分享">
+            <meta name="ajs-parent-page-id" content="2823701">
+            <meta name="ajs-space-key" content="techZyhz">
+            <meta name="ajs-space-name" content="技术文档·盒子团队">
+            <meta name="ajs-jira-metadata-count" content="-1">
+            <meta name="ajs-from-page-title" content="">
+            <meta name="ajs-can-remove-page" content="true">
+            <meta name="ajs-browse-page-tree-mode" content="view">
+            <meta name="ajs-user-display-name" content="admin">
+            <meta name="ajs-editor.loader.comment.resources" content="&lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/9f01679814e63f4c0513d02c90477002/_/download/contextbatch/css/comment-editor/batch.css&quot; media=&quot;all&quot;&gt;
+">
+            <meta name="ajs-context-path" content="">
+            <meta name="ajs-base-url" content="http://la.knowbox.cn:8090">
+            <meta name="ajs-version-number" content="5.4.4">
+            <meta name="ajs-build-number" content="4733">
+            <meta name="ajs-remote-user" content="admin">
+            <meta name="ajs-current-user-fullname" content="admin">
+            <meta name="ajs-current-user-avatar-url" content="/images/icons/profilepics/default.png">
+            <meta name="ajs-static-resource-url-prefix" content="/s/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/_">
+            <meta name="ajs-global-settings-attachment-max-size" content="10485760">
+            <meta name="ajs-user-locale" content="zh_CN">
+            <meta name="ajs-enabled-dark-features" content="sync.event">
+            <meta name="ajs-atl-token" content="55925c099c1bdcc106a0765062240739c8ece748">
+            <meta name="ajs-confluence-flavour" content="VANILLA">
+            <meta name="ajs-editor.loader.resources" content="&lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/8a0faeca8dd64092a882441a5505c1c8/_/download/contextbatch/css/editor,macro-browser,fullpage-editor,-viewcontent,-atl.general/batch.css&quot; media=&quot;all&quot;&gt;
+&lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/8a0faeca8dd64092a882441a5505c1c8/_/download/contextbatch/css/editor,macro-browser,fullpage-editor,-viewcontent,-atl.general/batch.css?media=%28max-width%3A+1450px%29&quot; media=&quot;(max-width: 1450px)&quot;&gt;
+&lt;!--[if lt IE 9]&gt;
+&lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/8a0faeca8dd64092a882441a5505c1c8/_/download/contextbatch/css/editor,macro-browser,fullpage-editor,-viewcontent,-atl.general/batch.css?conditionalComment=lt+IE+9&quot; media=&quot;all&quot;&gt;
+&lt;![endif]--&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/8a0faeca8dd64092a882441a5505c1c8/_/download/contextbatch/js/editor,macro-browser,fullpage-editor,-viewcontent,-atl.general/batch.js&quot; &gt;&lt;/script&gt;
+">
+            <meta name="ajs-date.format" content="MMM dd, yyyy">
+    
+    <link rel="shortcut icon" href="http://la.knowbox.cn:8090/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="http://la.knowbox.cn:8090/favicon.ico">
+
+<link rel="search" type="application/opensearchdescription+xml" href="http://la.knowbox.cn:8090/opensearch/osd.action" title="Confluence">
+    
+                    
+            <meta name="ajs-jira-metadata-show-discovery" content="true">
+            <meta name="ajs-create-issue-metadata-show-discovery" content="true">
+            
+
+    <!-- include system javascript resources -->
+    <script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch.js"></script><style type="text/css"></style>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/39/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(5).js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(6).js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(7).js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.confluence.plugins.confluence-space-ia_soy-resources.js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.confluence.plugins.confluence-space-ia_spacesidebar.js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.confluence.plugins.confluence-highlight-actions_highlighting-experiment-resources.js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.support.stp_stp-license-status-resources.js"></script>
+<script type="text/javascript" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/com.atlassian.mywork.mywork-confluence-host-plugin_mw-header-anchor.js"></script>
+
+    
+
+        
+    <!-- end system javascript resources -->
+
+        
+        
+
+    
+                <link rel="canonical" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051">
+        <link rel="shortlink" href="http://la.knowbox.cn:8090/x/44xF">
+    <meta name="wikilink" content="[techZyhz:关于redis负载报警的追查]">
+    <meta name="page-version" content="10">
+
+<link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(8).css" media="all"><link type="text/css" rel="stylesheet" href="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/batch(9).css" media="(max-width: 1450px)"><!--[if lt IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/8a0faeca8dd64092a882441a5505c1c8/_/download/contextbatch/css/editor,macro-browser,fullpage-editor,-viewcontent,-atl.general/batch.css?conditionalComment=lt+IE+9" media="all">
+<![endif]-->
+            <meta name="ajs-content-type" content="page">
+            <meta name="ajs-min-editor-height" content="150">
+            <meta name="ajs-editor-plugin-resource-prefix" content="/s/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_">
+            <meta name="ajs-num-attachments" content="4">
+            <meta name="ajs-auto-start" content="false">
+            <meta name="ajs-cancel-button-close-text" content="取消">
+            <meta name="ajs-content-id" content="4558051">
+            <meta name="ajs-action-locale" content="zh_CN">
+            <meta name="ajs-save-drafts" content="true">
+            <meta name="ajs-use-inline-tasks" content="true">
+            <meta name="ajs-heartbeat" content="true">
+            <meta name="ajs-cancel-button-discard-text" content="">
+            <meta name="ajs-draft-id" content="0">
+            <meta name="ajs-new-page" content="false">
+            <meta name="ajs-form-name" content="inlinecommentform">
+            <meta name="ajs-attachment-source-content-id" content="4558051">
+            <meta name="ajs-editor-mode" content="richtext">
+            <meta name="ajs-draft-type" content="page">
+            <meta name="ajs-existing-draft-id" content="0">
+            <meta name="ajs-can-attach-files" content="true">
+                
+            		    <meta name="ajs-max-thumb-width" content="300">
+		    <meta name="ajs-can-send-email" content="false">
+		    <meta name="ajs-is-dev-mode" content="false">
+		    <meta name="ajs-draft-save-interval" content="30000">
+		    <meta name="ajs-show-hidden-user-macros" content="true">
+		    <meta name="ajs-is-admin" content="true">
+		    <meta name="ajs-confluence.prefs.editor.disable.autocomplete" content="false">
+		    <meta name="ajs-confluence.prefs.editor.disable.autoformat" content="false">
+		    <meta name="ajs-heartbeat-interval" content="30000">
+	
+    </head>
+
+<body onload="placeFocus()" id="com-atlassian-confluence" class="theme-default  aui-layout aui-theme-default" data-aui-version="5.1.3">
+
+        
+    <ul id="assistive-skip-links" class="assistive">
+    <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#title-heading">转至内容</a></li>
+    <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#breadcrumbs">转至导航栏</a></li>
+    <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#header-menu-bar">转至主菜单</a></li>
+    <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#navigation">转至动作菜单</a></li>
+    <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#quick-search-query">转至快速搜索</a></li>
+</ul>
+<div id="page">
+<div id="full-height-container">
+    <div id="header-precursor">
+        <div class="cell">
+            
+                            </div>
+    </div>
+    
+
+
+
+<header id="header" role="banner">
+    <nav class="aui-header aui-dropdown2-trigger-group" role="navigation" data-aui-responsive="true"><div class="aui-header-inner"><div class="aui-header-primary"><h1 id="logo" class="aui-header-logo aui-header-logo-custom"><a href="http://la.knowbox.cn:8090/"><img src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/confluence-logo.png" alt="Confluence" data-aui-responsive-header-index="0"></a></h1><ul class="aui-nav" style="width: auto;">
+                            <li>
+            
+        
+        
+<a id="space-menu-link" class="aui-nav-link aui-dropdown2-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" aria-haspopup="true" aria-owns="space-menu-link-content" title="空间"><span class="browse">空间</span><span class="aui-icon-dropdown"></span></a><div id="space-menu-link-content" class="aui-dropdown2 aui-style-default aui-dropdown2-in-header" aria-hidden="false"></div>
+        </li>
+                    <li>
+            
+    
+        
+<a id="people-directory-link" href="http://la.knowbox.cn:8090/peopledirectory.action" class=" aui-nav-imagelink" title="人员">
+            <span>人员</span>
+    </a>
+        </li>
+                                            <li style="display: none;"><a id="aui-responsive-header-dropdown-trigger-0" class="aui-dropdown2-trigger" aria-owns="aui-responsive-header-dropdown-content-0" aria-haspopup="true" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">更多<span class="icon aui-icon-dropdown"></span></a><div id="aui-responsive-header-dropdown-content-0" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul id="aui-responsive-header-dropdown-list-0"></ul></div></div></li><li>
+            
+    
+            
+<a id="create-page-button" href="http://la.knowbox.cn:8090/pages/createpage.action?spaceKey=techZyhz&amp;fromPageId=4558051" class="aui-button aui-style aui-button-primary aui-nav-imagelink" title="创建内容 (c)">
+            <span>创建</span>
+    </a>
+        </li>
+        </ul>
+</div><div class="aui-header-secondary"><ul class="aui-nav">
+                <li>
+<form id="quick-search" class="aui-quicksearch dont-default-focus header-quicksearch" action="http://la.knowbox.cn:8090/dosearchsite.action" method="get">
+    <fieldset>
+                        <label for="quick-search-query" class="assistive">快速搜索</label>
+        <input id="quick-search-query" class="text app-search search quick-search-query" type="text" accesskey="q" autocomplete="off" name="queryString" title="快速搜索 (/或者g ，g)" placeholder="搜索">
+        <input id="quick-search-submit" class="quick-search-submit" type="submit" value="搜索">
+
+        <div class="aui-dd-parent quick-nav-drop-down"></div>
+    </fieldset>
+    <div class="hidden parameters">
+                    <!-- putMetadata failed to add value for key "quick-nav-enabled" so rendering metadata inline - see server debug log for details -->
+        <meta name="ajs-quick-nav-enabled" content="true">
+                </div>
+</form>
+</li>
+    <li>    
+        <a id="help-menu-link" class="aui-nav-link aui-dropdown2-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" aria-haspopup="true" aria-owns="help-menu-link-content" title="帮助">
+        <span class="aui-icon aui-icon-small aui-iconfont-help">帮助</span>
+    </a>
+    <nav id="help-menu-link-content" class="aui-dropdown2 aui-style-default" aria-hidden="true">
+                    <div class="aui-dropdown2-section">
+                <ul id="help-menu-link-leading" class="aui-list-truncate section-leading first">
+                                            <li>
+    
+            
+<a id="confluence-help-link" href="http://docs.atlassian.com/confluence/docs-54/Getting+Help+And+Support" class="interactive" title="访问Confluence文档首页" target="_blank">
+        在线帮助
+</a>
+</li>
+                                            <li>
+    
+                
+<a id="keyboard-shortcuts-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="interactive" title="查看可用的键盘快捷方式 (?)">
+        快捷键
+</a>
+</li>
+                                            <li>
+    
+            
+<a id="feed-builder-link" href="http://la.knowbox.cn:8090/dashboard/configurerssfeed.action" class="interactive" title="创建个性化的 RSS源。">
+        RSS源建立器
+</a>
+</li>
+                                            <li>
+    
+            
+<a id="whats-new-menu-link" href="http://docs.atlassian.com/confluence/docs-54/whatsnew/iframe?od=false&amp;a=true" class="interactive" title="">
+        新功能
+</a>
+</li>
+                                            <li>
+    
+                
+<a id="gadget-directory-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="user-item administration-link  interactive" title="浏览小工具">
+        可用的小工具
+</a>
+</li>
+                                            <li>
+    
+            
+<a id="confluence-about-link" href="http://la.knowbox.cn:8090/aboutconfluencepage.action" class="interactive" title="获取关于Confluence的更多信息">
+        关于Confluence
+</a>
+</li>
+                                    </ul>
+            </div>
+            </nav>
+    </li>
+    <li>    
+        <a id="admin-menu-link" class="aui-nav-link aui-dropdown2-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" aria-haspopup="true" aria-owns="admin-menu-link-content" title="管理">
+        <span class="aui-icon aui-icon-small aui-iconfont-configure">管理</span>
+    </a>
+    <nav id="admin-menu-link-content" class="aui-dropdown2 aui-style-default" aria-hidden="true">
+                    <div class="aui-dropdown2-section">
+                <ul id="admin-menu-link-leading" class="aui-list-truncate section-leading first">
+                                            <li>
+    
+            
+<a id="administration-link" href="http://la.knowbox.cn:8090/admin/console.action" class="    " title="管理和维护Confluence">
+        站点管理
+</a>
+</li>
+                                            <li>
+    
+            
+<a id="manage-users-link" href="http://la.knowbox.cn:8090/admin/users/browseusers.action" class="    " title="添加或邀请用户，并管理现有用户。">
+        用户管理
+</a>
+</li>
+                                            <li>
+    
+            
+<a id="plugin-administration-link" href="http://la.knowbox.cn:8090/plugins/servlet/upm" class="    " title="查找及安装插件，并管理已存在的插件。">
+        插件
+</a>
+</li>
+                                    </ul>
+            </div>
+            </nav>
+    </li>
+                <li>
+        
+    
+            
+<a id="notifications-anchor" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="mw-anchor read aui-nav-imagelink" title="打开通知 (g ，n)"><div class="badge-i aui-icon aui-icon-small"><span class="badge-w"><span class="badge">0</span></span></div></a>
+    </li>
+        <li>                                    
+        <a id="user-menu-link" class="aui-dropdown2-trigger " aria-haspopup="true" aria-owns="user-menu-link-content" data-username="admin" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" title="admin">
+                    <div class="aui-avatar aui-avatar-small">
+                <div class="aui-avatar-inner">
+                    <img src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/default.png">
+                </div>
+            </div>
+            <span class="aui-icon-dropdown"></span>
+        </a>
+        <nav id="user-menu-link-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                    <ul id="user-menu-link-user-status" class="aui-list-truncate section-user-status first">
+                                                    <li>
+    
+            
+<a id="create-user-status-link" href="http://la.knowbox.cn:8090/display/~admin" class="   user-item update-user-status " title="更新你的状态">
+        更新状态…
+</a>
+</li>
+                                            </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul id="user-menu-link-user-preferences" class="aui-list-truncate section-user-preferences">
+                                                    <li>
+    
+            
+<a id="create-personal-space-link" href="http://la.knowbox.cn:8090/spaces/createpersonalspace.action" class="   user-item personal-space create-personal-space-link " title="">
+        添加个人空间…
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="view-user-history-link" href="http://la.knowbox.cn:8090/users/viewuserhistory.action" class="   user-item user-history popup-link " title=" (g ，r)">
+        最近浏览
+</a>
+</li>
+                                            </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul id="user-menu-link-user-content" class="aui-list-truncate section-user-content">
+                                                    <li>
+    
+            
+<a id="view-user-profile-link" href="http://la.knowbox.cn:8090/users/viewmyprofile.action" class="   user-item user-profile " title="">
+        用户信息
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="user-settings-link" href="http://la.knowbox.cn:8090/users/viewmysettings.action" class="   user-item " title="">
+        设置
+</a>
+</li>
+                                                    <li>
+    
+            
+<a href="http://la.knowbox.cn:8090/users/viewfollow.action?username=admin" class="   follow-link " title="">
+        网络
+</a>
+</li>
+                                                    <li>
+    
+            
+<a href="http://la.knowbox.cn:8090/display/status/admin/list" class="   user-item list-user-status " title="">
+        状态更新
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="user-favourites-link" href="http://la.knowbox.cn:8090/users/viewmyfavourites.action" class="   user-item " title="">
+        收藏
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="user-watches-link" href="http://la.knowbox.cn:8090/users/viewnotifications.action" class="   user-item " title="">
+        关注
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="user-drafts-link" href="http://la.knowbox.cn:8090/users/viewmydrafts.action" class="   user-item " title="">
+        草稿
+</a>
+</li>
+                                                    <li>
+    
+            
+<a id="upm-requests-link" href="http://la.knowbox.cn:8090/plugins/servlet/upm/requests?source=header_user" class="    " title="">
+        Atlassian 应用程序商店
+</a>
+</li>
+                                            </ul>
+                </div>
+                            <div class="aui-dropdown2-section">
+                    <ul id="user-menu-link-user-operations" class="aui-list-truncate section-user-operations">
+                                                    <li>
+    
+            
+<a id="logout-link" href="http://la.knowbox.cn:8090/logout.action" class="   user-item logout-link " title="">
+        注销
+</a>
+</li>
+                                            </ul>
+                </div>
+                    </nav>
+                    </li>
+</ul>
+</div></div><!-- .aui-header-inner--></nav><!-- .aui-header -->
+    <br class="clear">
+</header>
+
+    
+    	<div class="ia-splitter">
+    		<div class="ia-splitter-left">
+    			<div class="ia-fixed-sidebar" style="width: 285px; visibility: visible; top: 41px; left: 0px;">
+    				
+	    	<div class="acs-side-bar ia-scrollable-section"><div class="acs-side-bar-space-info tipsy-enabled" data-configure-tooltip="编辑空间细节"><div class="avatar"><div class="space-logo " data-key="techZyhz" data-name="技术文档·盒子团队" data-entity-type="confluence.space"><div class="avatar-img-container"><div class="avatar-img-wrapper"><a href="http://la.knowbox.cn:8090/display/techZyhz" title="技术文档·盒子团队"><img class="avatar-img" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/default-space-logo-48.png" alt="技术文档·盒子团队"></a></div></div></div></div><div class="name"><a href="http://la.knowbox.cn:8090/display/techZyhz" title="技术文档·盒子团队">技术文档·盒子团队</a></div><div class="flyout-handle icon"></div></div><div class="acs-side-bar-content"><div class="acs-nav-wrapper"><div class="acs-nav" data-has-create-permission="true" data-quick-links-state="hide" data-nav-type="page-tree"><div class="acs-nav-sections"></div></div></div><div class="ia-secondary-container tipsy-enabled" data-tree-type="page-tree"><div class="ia-secondary-header"><h5 class="ia-secondary-header-title page-tree"><span class="icon"></span><span class="label">页面树结构</span></h5></div><div class="ia-secondary-content">
+
+
+<div class="plugin_pagetree">
+
+        
+        
+    <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children" id="children721103-0">
+<ul class="plugin_pagetree_children_list" id="child_ul721103-0">
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan1671525-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=1671525">新同学指南</a>
+        </span>
+            </div>
+
+        <div id="children1671525-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus721493-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan721493-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721493">团队编程规范约定</a>
+        </span>
+            </div>
+
+        <div id="children721493-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus2823800-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2823800-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823800">报警值班周报</a>
+        </span>
+            </div>
+
+        <div id="children2823800-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus2823701-0" class="plugin_pagetree_childtoggle icon icon-section-opened" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2823701-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823701">技术分享</a>
+        </span>
+            </div>
+
+        <div id="children2823701-0" class="plugin_pagetree_children_container">
+                                                        <ul class="plugin_pagetree_children_list" id="child_ul2823701-0">
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan1671574-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=1671574">zabbix监控后台</a>
+        </span>
+            </div>
+
+        <div id="children1671574-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan1671566-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=1671566">yii2接口性能分析工具</a>
+        </span>
+            </div>
+
+        <div id="children1671566-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2826223-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2826223">awk工具使用介绍</a>
+        </span>
+            </div>
+
+        <div id="children2826223-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan1671451-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=1671451">一次内网ip变更引发的问题追查</a>
+        </span>
+            </div>
+
+        <div id="children1671451-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan721506-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721506">用户反馈追查步骤及资源</a>
+        </span>
+            </div>
+
+        <div id="children721506-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2820548-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2820548">线上问题追查工具</a>
+        </span>
+            </div>
+
+        <div id="children2820548-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2823832-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823832">生产环境日志分布及格式</a>
+        </span>
+            </div>
+
+        <div id="children2823832-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4556085-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4556085">关于gym服务定时器问题的追查</a>
+        </span>
+            </div>
+
+        <div id="children4556085-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4555860-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4555860">关于git的使用</a>
+        </span>
+            </div>
+
+        <div id="children4555860-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4556659-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4556659">网络状态小议-重传/timewait</a>
+        </span>
+            </div>
+
+        <div id="children4556659-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4556672-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4556672">PHP数组结构分析</a>
+        </span>
+            </div>
+
+        <div id="children4556672-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4556816-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4556816">热备机环境自动化检测</a>
+        </span>
+            </div>
+
+        <div id="children4556816-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4557112-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4557112">shell中常用的linux命令整理</a>
+        </span>
+            </div>
+
+        <div id="children4557112-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span plugin_pagetree_current" id="childrenspan4558051-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051">关于redis负载报警的追查</a>
+        </span>
+            </div>
+
+        <div id="children4558051-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4558575-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558575">socket进阶</a>
+        </span>
+            </div>
+
+        <div id="children4558575-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan5243825-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=5243825">2018-02-18报警问题排查&amp;临时解决</a>
+        </span>
+            </div>
+
+        <div id="children5243825-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan5243829-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=5243829">linux 10位随机数字病毒的清除</a>
+        </span>
+            </div>
+
+        <div id="children5243829-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan5866437-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=5866437">GO协程异常外部无法捕获导致主进程中断解决过程</a>
+        </span>
+            </div>
+
+        <div id="children5866437-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan5866826-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=5866826">小象nodejs导出服务失败追查</a>
+        </span>
+            </div>
+
+        <div id="children5866826-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan5867063-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=5867063">golang中redis及mysql连接池的设计方案整理</a>
+        </span>
+            </div>
+
+        <div id="children5867063-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+                                        </ul>
+                                        </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus721508-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan721508-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721508">团队业务方案</a>
+        </span>
+            </div>
+
+        <div id="children721508-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus2823788-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2823788-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823788">服务器环境配置记录</a>
+        </span>
+            </div>
+
+        <div id="children2823788-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus721296-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan721296-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721296">knowbox数据库设计</a>
+        </span>
+            </div>
+
+        <div id="children721296-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus1277955-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan1277955-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=1277955">knowbox_stat数据库表设计</a>
+        </span>
+            </div>
+
+        <div id="children1277955-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus2824362-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2824362-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2824362">python杂症处理</a>
+        </span>
+            </div>
+
+        <div id="children2824362-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan2824720-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2824720">数据仓库表设计思路</a>
+        </span>
+            </div>
+
+        <div id="children2824720-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                                            <a id="plusminus4030618-0" class="plugin_pagetree_childtoggle icon icon-section-closed" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            </a>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4030618-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4030618">公共服务建设</a>
+        </span>
+            </div>
+
+        <div id="children4030618-0" class="plugin_pagetree_children_container">
+                                                            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4555768-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4555768">内部系统接入统一登录中心说明：</a>
+        </span>
+            </div>
+
+        <div id="children4555768-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+            <li>
+    <div class="plugin_pagetree_childtoggle_container">
+                    <span class="no-children icon"></span>
+            </div>
+    <div class="plugin_pagetree_children_content">
+          
+        
+                    <span class="plugin_pagetree_children_span" id="childrenspan4556528-0">                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4556528">内部系统redis占用说明</a>
+        </span>
+            </div>
+
+        <div id="children4556528-0" class="plugin_pagetree_children_container">
+            </div>
+    </li>
+    </ul>
+</div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false&amp;expandCurrent=true">
+        <input type="hidden" name="treePageId" value="4558051">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="721103">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="techZyhz">
+
+        <input type="hidden" name="i18n-pagetree.loading" value="载入中...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="无法载入页面树。看来你没有权限查看根页面。">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="检索页面树时发生问题。有关详细信息，请检查服务器的日志文件。">
+        <input type="hidden" name="loginUrl" value="/login.action?os_destination=%2Fpages%2Fviewpage.action%3FpageId%3D4558051">
+        <input type="hidden" name="mobile" value="false">
+
+                <fieldset class="hidden">
+                                                <input type="hidden" name="ancestorId" value="2823701">
+                                    <input type="hidden" name="ancestorId" value="721103">
+                                    </fieldset>
+    </fieldset>
+</div>
+</div></div></div><div class="hidden"><a href="http://la.knowbox.cn:8090/collector/pages.action?key=techZyhz" id="space-pages-link" title=" (g ，s)"></a><script type="text/x-template" title="logo-config-content"><h2>空间细节</h2><form id="crop-photo-form" class="aui" method="post" action="#"><div id="sidebar-logo-messages"></div><fieldset><div class="field-group"><label for="spaceName">名称</label><input autocomplete="off" name="spaceName" id="spaceName" class="text" maxlength="255" value="{spaceName}"><input type="hidden" name="spaceKey" id="spaceKey" value="techZyhz"><input type="hidden" name="offsetX" id="avatar-offsetX" value="-1"><input type="hidden" name="offsetY" id="avatar-offsetY" value="-1"><input type="hidden" name="width" id="avatar-width" value="-1"><input type="hidden" name="logoType" id="logoType" value="default" data-last-value="default"></div></fieldset></form><form id="upload-logo-form" class="aui" method="POST" action="#" enctype="multipart/form-data"><fieldset class="group"><legend><span>Logo</span></legend><div class="field-group"><input class="upload" type="file" id="upload-logo-input" name="upload-logo-input"></div><small class="hidden"><a href="#" id="reset-logo">重置默认logo</a></small><div id="image-holder" /></fieldset></form><div id="space-details-actions" class="buttons-container"><div class="buttons"><button class="aui-button save">保存</button><a href="#" class="aui-button aui-button-link cancel">取消</a></div></div></script></div></div><div class="space-tools-section"><div id="space-tools-menu-additional-items" class="hidden"><div data-label="重排页面" data-class="" data-href="/pages/reorderpages.action?key=techZyhz">重排页面</div><div data-label="配置侧边栏" data-class="configure-sidebar" data-href="">配置侧边栏</div></div><div id="space-tools-dd-dummy"></div><a id="space-tools-menu-trigger" class="aui-button aui-button-subtle aui-dropdown2-trigger tipsy-enabled" aria-owns="space-tools-dd-dummy" data-collapsed-tooltip="空间管理"><span class="aui-icon aui-icon-small aui-iconfont-configure">Configure</span><span class="label">空间管理</span></a><a class="expand-collapse-trigger" data-tooltip="收起侧边栏 ( [ )"></a></div>
+    
+    			<div class="ia-splitter-handle tipsy-enabled" data-tooltip="收起侧边栏 ( [ )" original-title=" ([)"><div class="ia-splitter-handle-highlight"></div></div></div>
+    		</div>
+        <!-- \#header -->
+
+        
+        <div id="main" class=" aui-page-panel" style="margin-left: 285px;">
+                <div id="main-header">
+            
+    <div id="navigation" class="content-navigation view">
+                    <ul class="ajs-menu-bar">
+                            <li class="ajs-button normal">
+
+    
+        
+                            
+    
+    
+    <a id="editPageLink" href="http://la.knowbox.cn:8090/pages/editpage.action?pageId=4558051" rel="nofollow" class="edit" accesskey="e" title="编辑 (e)">
+                <span><u>E</u>编辑</span>    </a>
+</li>
+                <li class="ajs-button normal">
+
+    
+        
+                            
+    
+    
+    <a id="watch-content-button" href="http://la.knowbox.cn:8090/pages/viewpage.action?watchingPage=false&amp;watchingSpace=false&amp;watchingBlogs=false&amp;isAdmin=true&amp;isBlogPost=false" rel="nofollow" class="watch-menu not-watching" title="关注(w)">
+                <span><u>W</u>关注</span>    </a>
+</li>
+                        
+        <li class="normal ajs-menu-item">
+        <a id="add-menu-link" class="add hidden ajs-menu-title aui-dropdown2-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" aria-haspopup="true" aria-owns="add-menu" data-container="#navigation"><span><span>添加</span></span></a>         <div id="add-menu" class="aui-dropdown2 aui-style-default">
+                            <ul id="add-menu-space" class="section-space first aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="createPageLink" href="http://la.knowbox.cn:8090/pages/createpage.action?spaceKey=techZyhz&amp;fromPageId=4558051" rel="nofollow" class="add-page" accesskey="p" title="添加页面">
+                <span>页面</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="createPageLinkTemplate" href="http://la.knowbox.cn:8090/pages/createpage-choosetemplate.action?spaceKey=techZyhz&amp;newSpaceKey=techZyhz&amp;fromPageId=4558051" rel="nofollow" class="add-page-template" accesskey="p" title="使用模板添加页面">
+                <span>由模板产生的页面</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="createBlogpostLink" href="http://la.knowbox.cn:8090/pages/createblogpost.action?spaceKey=techZyhz" rel="nofollow" class="add-news" title="新增博客文章 (b)">
+                <span>博文</span>    </a>
+</li>
+                                </ul>
+                            <ul id="add-menu-page" class="section-page aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="add-comment-menu-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;showComments=true&amp;showCommentArea=true#addcomment" rel="nofollow" class="add-comment" title="添加评论">
+                <span>评论</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="add-attachment-link" href="http://la.knowbox.cn:8090/pages/viewpageattachments.action?pageId=4558051" rel="nofollow" class="add-attachment" accesskey="t" title="添加附件">
+                <span>附件</span>    </a>
+</li>
+                                </ul>
+                    </div>
+    </li>
+                    
+        <li class="normal ajs-menu-item">
+        <a id="action-menu-link" class="action ajs-menu-title aui-dropdown2-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" aria-haspopup="true" aria-owns="action-menu" data-container="#navigation"><span><span>工具</span></span></a>         <div id="action-menu" class="aui-dropdown2 aui-style-default most-right-menu-item">
+                            <ul id="action-menu-primary" class="section-primary first aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="view-attachments-link" href="http://la.knowbox.cn:8090/pages/viewpageattachments.action?pageId=4558051" rel="nofollow" class="action-view-attachments" accesskey="t" title="查看附件 (t)">
+                <span><u>t</u>附件(4)</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-view-history-link" href="http://la.knowbox.cn:8090/pages/viewpreviousversions.action?pageId=4558051" rel="nofollow" class="action-view-history" title="">
+                <span>页面历史</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-page-permissions-link" href="http://la.knowbox.cn:8090/pages/viewinfo.action?pageId=4558051" rel="nofollow" class="action-page-permissions" title="编辑限制">
+                <span>限制</span>    </a>
+</li>
+                                </ul>
+                            <ul id="action-menu-marker" class="section-marker aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="page-favourite" href="http://la.knowbox.cn:8090/labels/addfavourite.action?entityId=4558051&amp;atl_token=55925c099c1bdcc106a0765062240739c8ece748" rel="nofollow" class="action-page-favourite" title="">
+                <span>收藏夹</span>    </a>
+</li>
+                                </ul>
+                            <ul id="action-menu-secondary" class="section-secondary aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="view-page-info-link" href="http://la.knowbox.cn:8090/pages/viewinfo.action?pageId=4558051" rel="nofollow" class="action-view-info" title="">
+                <span>页面信息</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="link-to-page-link" href="http://la.knowbox.cn:8090/pages/viewinfo.action?pageId=4558051" rel="nofollow" class="" title="链接至本页面 (k)">
+                <span>链接到此页…</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="view-in-hierarchy-link" href="http://la.knowbox.cn:8090/pages/reorderpages.action?key=techZyhz&amp;openId=4558051#selectedPageInHierarchy" rel="nofollow" class="" title="">
+                <span>以层级方式查看</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-view-source-link" href="http://la.knowbox.cn:8090/plugins/viewsource/viewpagesrc.action?pageId=4558051" rel="nofollow" class="action-view-source popup-link" title="">
+                <span>查看页面源代码</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-view-storage-link" href="http://la.knowbox.cn:8090/plugins/viewstorage/viewpagestorage.action?pageId=4558051" rel="nofollow" class="action-view-storage view-storage-link popup-link" title="">
+                <span>查看存储格式</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-export-pdf-link" href="http://la.knowbox.cn:8090/spaces/flyingpdf/pdfpageexport.action?pageId=4558051" rel="nofollow" class="" title="">
+                <span>导出为PDF</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-export-word-link" href="http://la.knowbox.cn:8090/exportword?pageId=4558051" rel="nofollow" class="action-export-word" title="">
+                <span>导出为Word</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="import-word-doc" href="http://la.knowbox.cn:8090/pages/worddav/uploadimport.action?pageId=4558051" rel="nofollow" class="" title="">
+                <span>Doc文件导入</span>    </a>
+</li>
+                                </ul>
+                            <ul id="action-menu-modify" class="section-modify aui-dropdown2-section">
+                                            <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-copy-page-link" href="http://la.knowbox.cn:8090/pages/copypage.action?idOfPageToCopy=4558051&amp;spaceKey=techZyhz" rel="nofollow" class="action-copy" title="">
+                <span>复制</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-move-page-dialog-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051" rel="nofollow" class="action-move" title="">
+                <span>移动</span>    </a>
+</li>
+                                        <li>
+
+    
+        
+                            
+    
+    
+    <a id="action-remove-content-link" href="http://la.knowbox.cn:8090/pages/removepage.action?pageId=4558051" rel="nofollow" class="action-remove" title="">
+                <span>删除</span>    </a>
+</li>
+                                </ul>
+                    </div>
+    </li>
+            </ul>
+    </div>
+
+            
+            <div id="title-heading" class="pagetitle with-breadcrumbs">
+                
+                                    <div id="breadcrumb-section">
+                        
+    
+    
+    <ol id="breadcrumbs">
+                    
+                
+        <li class="first">
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/collector/pages.action?key=techZyhz">页面</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721103">TECH·作业盒子</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823701">技术分享</a></span>
+                </li></ol>
+
+
+                    </div>
+                
+                
+        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#page-banner-end" class="assistive">跳到banner的尾部</a>
+<div id="page-banner-start" class="assistive"></div>
+
+                    
+            <div id="page-metadata-banner" style="visibility: visible;"><ul class="banner"><li id="system-content-items" class="noprint"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051" title="权限限制" id="content-metadata-page-restrictions" class="hidden"><img class="page-banner-item-icon" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/red_padlock.png" style="height: 16px; width: 16px;"></a><a href="http://la.knowbox.cn:8090/pages/viewpageattachments.action?pageId=4558051&amp;metadataLink=true" title="4 个附件" id="content-metadata-attachments"><img class="page-banner-item-icon" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/grey_attach.png" style="height: 16px; width: 16px;"></a></li><li class="page-metadata-item noprint" id="content-metadata-jira-wrapper"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051" title="" id="content-metadata-jira" class="aui-button aui-button-subtle content-metadata-jira tipsy-disabled hidden"><img class="page-banner-item-icon" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/icon-jira-link.png" style="height: 16px; width: 16px;"><span>JIRA链接</span></a></li></ul></div>
+            
+
+<a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#page-banner-start" class="assistive">回到标题开始</a>
+<div id="page-banner-end" class="assistive"></div>
+    
+
+                <h1 id="title-text" class="with-breadcrumbs">
+                                                <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051">关于redis负载报警的追查</a>
+                                    </h1>
+            </div>
+        </div><!-- \#main-header -->
+        
+        
+
+        <div id="sidebar-container">
+                                                </div><!-- \#sidebar-container -->
+
+        
+    
+
+        
+
+
+
+
+        
+
+    
+    
+        
+    
+    
+                    
+    
+
+                        
+    
+    
+
+    
+
+
+
+
+<div id="content" class="page view">
+    
+
+<div id="action-messages">
+                        </div>
+
+
+
+        <script type="text/x-template" title="searchResultsGrid">
+    <table class="aui">
+        <thead>
+            <tr class="header">
+                <th class="search-result-title">页面标题</th>
+                <th class="search-result-space">空间</th>
+                <th class="search-result-date">更新于</th>
+            </tr>
+        </thead>
+    </table>
+</script>
+<script type="text/x-template" title="searchResultsGridCount">
+    <p class="search-result-count">{0}</p>
+</script>
+<script type="text/x-template" title="searchResultsGridRow">
+    <tr class="search-result">
+        <td class="search-result-title"><a href="{1}" class="content-type-{2}"><span>{0}</span></a></td>
+        <td class="search-result-space"><a class="space" href="/display/{4}/" title="{3}">{3}</a></td>
+        <td class="search-result-date"><span class="date" title="{6}">{5}</span></td>
+    </tr>
+</script>
+        
+    
+            
+
+        
+                            
+    
+
+                    
+
+        
+        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#page-metadata-end" class="assistive">转至元数据结尾</a>
+<div id="page-metadata-start" class="assistive"></div>
+
+    <div class="page-metadata">
+        <ul>
+            <li class="page-metadata-modification-info">
+                
+        
+    
+        
+    
+        
+        
+            Created and last modified by <span class="author">     <a href="http://la.knowbox.cn:8090/display/~yushaolong" class="url fn confluence-userlink userlink-0" data-username="yushaolong" title="" data-user-hover-bound="true">yushaolong</a></span> on <a class="last-modified" title="十一月 08, 2017 20:14" href="http://la.knowbox.cn:8090/pages/diffpagesbyversion.action?pageId=4558051&amp;selectedPageVersions=9&amp;selectedPageVersions=10">十一月 08, 2017</a>
+                </li>
+        </ul>
+    </div>
+
+
+<a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#page-metadata-start" class="assistive">转至元数据起始</a>
+<div id="page-metadata-end" class="assistive"></div>
+
+        
+                                
+        <div id="main-content" class="wiki-content">
+                           
+        <h2 id="id-关于redis负载报警的追查-一.目前已经完成的工作"><a href="file:///C:/Users/YUSHAOLONG/Desktop/%E4%BD%9C%E4%B8%9A%E7%9B%92%E5%AD%90/201711/redis%E9%97%AE%E9%A2%98/redis.html#%E4%B8%80.%E7%9B%AE%E5%89%8D%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90%E7%9A%84%E5%B7%A5%E4%BD%9C" class="external-link" rel="nofollow">一.目前已经完成的工作</a></h2><h3 id="id-关于redis负载报警的追查-1.初步怀疑由于定时任务的执行导致,对redis的写入量进行40s左右的监控"><strong><a href="file:///C:/Users/YUSHAOLONG/Desktop/%E4%BD%9C%E4%B8%9A%E7%9B%92%E5%AD%90/201711/redis%E9%97%AE%E9%A2%98/redis.html#1.%E5%88%9D%E6%AD%A5%E6%80%80%E7%96%91%E7%94%B1%E4%BA%8E%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E7%9A%84%E6%89%A7%E8%A1%8C%E5%AF%BC%E8%87%B4,%E5%AF%B9redis%E7%9A%84%E5%86%99%E5%85%A5%E9%87%8F%E8%BF%9B%E8%A1%8C40s%E5%B7%A6%E5%8F%B3%E7%9A%84%E7%9B%91%E6%8E%A7" class="external-link" rel="nofollow">1.初步怀疑由于定时任务的执行导致,对redis的写入量进行40s左右的监控</a></strong></h3><p>命令：&nbsp;<code>redis-cli -h 10.10.199.23 monitor</code><br>对监控的结果进行ip过滤，如下两列：</p><pre><code class="php">    次数  ip
+    <span class="hljs-number" style="color: rgb(245,135,31);">110</span> <span class="hljs-number" style="color: rgb(245,135,31);">10.10</span>.109.154
+    <span class="hljs-number" style="color: rgb(245,135,31);">129</span> <span class="hljs-number" style="color: rgb(245,135,31);">10.10</span>.196.185
+     <span class="hljs-number" style="color: rgb(245,135,31);">88</span> <span class="hljs-number" style="color: rgb(245,135,31);">10.10</span>.222.118
+     <span class="hljs-number" style="color: rgb(245,135,31);">95</span> <span class="hljs-number" style="color: rgb(245,135,31);">10.10</span>.246.38
+</code></pre><p>发现机器列表全部为作业盒子线上api机器,否定了定时任务的看法.</p><h3 id="id-关于redis负载报警的追查-2.继续选择一台机器10.10.109.154，进行10.29与11.05两天18:00-21:00时间段内的日志访问量对比分析："><a rel="nofollow"></a><strong>2.继续选择一台机器10.10.109.154，进行10.29与11.05两天18:00-21:00时间段内的日志访问量对比分析：</strong></h3><p>左图： 10.29 (ip去重后数量:13930)<br>右图： 11.05 (ip去重后数量:13573)</p><pre><code class="php">学生接口访问
+[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">10</span>_29]$ head -n <span class="hljs-number" style="color: rgb(245,135,31);">10</span> Student.access.ret                          │[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">11</span>_05]$ head -n10 Student.access.ret                          
+/v1_hurdle/student/summary? <span class="hljs-number" style="color: rgb(245,135,31);">84606</span>                                                  │/v1_hurdle/student/summary? <span class="hljs-number" style="color: rgb(245,135,31);">83698</span>
+/v1_common/<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info/get-student-<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">39837</span>                              │/v1_common/<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info/get-student-<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">39344</span>
+/v1_answer/student/wrong-topic-catalog? <span class="hljs-number" style="color: rgb(245,135,31);">29262</span>                                      │/v1_answer/student/wrong-topic-catalog? <span class="hljs-number" style="color: rgb(245,135,31);">27960</span>
+/v1_task/student/<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">23347</span>                                                       │/v1_task/student/<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">23340</span>
+/v2_hurdle/student/categories? <span class="hljs-number" style="color: rgb(245,135,31);">22011</span>                                               │/v2_hurdle/student/categories? <span class="hljs-number" style="color: rgb(245,135,31);">21684</span>
+/v1_homework/student/get-answer-result? <span class="hljs-number" style="color: rgb(245,135,31);">16947</span>                                      │/v1_hurdle/student/challenge-candidates? <span class="hljs-number" style="color: rgb(245,135,31);">16469</span>
+/v1_class/student/get-chat-<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">15794</span>                                             │/v1_homework/student/get-answer-result? <span class="hljs-number" style="color: rgb(245,135,31);">15259</span>
+/v1_hurdle/student/challenge-candidates? <span class="hljs-number" style="color: rgb(245,135,31);">15593</span>                                     │/v1_class/student/get-chat-<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">15102</span>
+/v1_homework/student/get-feed-homework-<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">14463</span>                                 │/v1_hurdle/student/third-page? <span class="hljs-number" style="color: rgb(245,135,31);">13556</span>
+/v1_user/student/get-info? <span class="hljs-number" style="color: rgb(245,135,31);">14166</span>                                                   │/v1_user/student/get-info? <span class="hljs-number" style="color: rgb(245,135,31);">13468</span>
+[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">10</span>_29]$                                                        │[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">11</span>_05]$
+</code></pre><pre><code class="php">老师接口访问
+[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">10</span>_29]$ head -n <span class="hljs-number" style="color: rgb(245,135,31);">10</span> Teacher.access.ret                          │[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">11</span>_05]$ head -n10 Teacher.access.ret                          
+/v1_homework/teacher/correct? <span class="hljs-number" style="color: rgb(245,135,31);">4764</span>                                                 │/v1_homework/teacher/correct? <span class="hljs-number" style="color: rgb(245,135,31);">1728</span>
+/v1_homework/teacher/get-correct-question? <span class="hljs-number" style="color: rgb(245,135,31);">1834</span>                                    │/v1_common/<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info/get-teacher-<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">1474</span>
+/v1_common/<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info/get-teacher-<span class="hljs-keyword" style="color: rgb(137,89,168);">global</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">1688</span>                               │/v1_activity/teacher-certification/<span class="hljs-keyword" style="color: rgb(137,89,168);">switch</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">1344</span>
+/v1_activity/teacher-certification/<span class="hljs-keyword" style="color: rgb(137,89,168);">switch</span>-info? <span class="hljs-number" style="color: rgb(245,135,31);">1578</span>                               │/v1_homework/teacher/get-correct-question? <span class="hljs-number" style="color: rgb(245,135,31);">1218</span>
+/v1_recommend/comprehen/get-comprehen-page? <span class="hljs-number" style="color: rgb(245,135,31);">1380</span>                                   │/v1_recommend/comprehen/get-comprehen-page? <span class="hljs-number" style="color: rgb(245,135,31);">1162</span>
+/v1_homework/teacher/get-homework-detail? <span class="hljs-number" style="color: rgb(245,135,31);">1284</span>                                     │/v1_recommend/syn/get-syn-page? <span class="hljs-number" style="color: rgb(245,135,31);">1010</span>
+/v1_recommend/syn/get-syn-page? <span class="hljs-number" style="color: rgb(245,135,31);">1142</span>                                               │/v1_homework/teacher/get-homework-detail? <span class="hljs-number" style="color: rgb(245,135,31);">1007</span>
+/v1_homework/teacher/get-question? <span class="hljs-number" style="color: rgb(245,135,31);">1018</span>                                            │/v1_user/resource/get-<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">898</span>
+/v1_tiku/personal/get-groups-collects? <span class="hljs-number" style="color: rgb(245,135,31);">1010</span>                                        │/v1_tiku/personal/get-groups-collects? <span class="hljs-number" style="color: rgb(245,135,31);">836</span>
+/v1_user/resource/get-<span class="hljs-keyword" style="color: rgb(137,89,168);">list</span>? <span class="hljs-number" style="color: rgb(245,135,31);">1008</span>                                                   │/v1_common/version/check-version? <span class="hljs-number" style="color: rgb(245,135,31);">744</span>
+[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">10</span>_29]$                                                        │[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">109</span>-<span class="hljs-number" style="color: rgb(245,135,31);">154</span> <span class="hljs-number" style="color: rgb(245,135,31);">11</span>_05]$
+</code></pre><p>发现用户访问量稳定，也并不是由于用户增加导致</p><h3 id="id-关于redis负载报警的追查-3.对redis的slowlog进行追踪："><a rel="nofollow"></a><strong>3.对redis的slow log进行追踪：</strong></h3><p>redis的slow log记录最多可追踪128条记录<br>命令：<code>redis-cli -h 10.10.199.23 slowlog get 128</code><br>进行去重处理后,发现慢查询记录如下：<br>慢查询生成的时间段为2017-11-06 13:41:58至2017-11-06 15:17:02</p><pre><code class="php">[yusl@<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">10</span>-<span class="hljs-number" style="color: rgb(245,135,31);">44</span>-<span class="hljs-number" style="color: rgb(245,135,31);">221</span> ~]$ cat slow_log.uniq 
+     <span class="hljs-number" style="color: rgb(245,135,31);">97</span> CRONTAB_HOMEWORK_*
+     <span class="hljs-number" style="color: rgb(245,135,31);">27</span> QUESTION_kbox_base_relate_courseassistquestion_*
+      <span class="hljs-number" style="color: rgb(245,135,31);">3</span> QUESTION_kbox_base_relate_knowledgequestion_*
+      <span class="hljs-number" style="color: rgb(245,135,31);">1</span> QUESTION_kbox_base_relate_paperquestion_*
+</code></pre><p>对于key为<code>CRONTAB_HOMEWORK_*</code>的来源进行追查，发现接口</p><pre><code class="php">==&gt;
+knowbox\modules\cron\controllers\CrontabHomeworkController::actionPublishCrontab() 
+==&gt;
+knowbox\modules\v1\homework\service\CrontabHomework::updateTeacherCrontabHomework()
+==&gt;
+common\caches\CrontabHomeworkCache::delAll()
+</code></pre><h3 id="id-关于redis负载报警的追查-4.对redis信息进行查看"><strong><a href="file:///C:/Users/YUSHAOLONG/Desktop/%E4%BD%9C%E4%B8%9A%E7%9B%92%E5%AD%90/201711/redis%E9%97%AE%E9%A2%98/redis.html##4.%E5%AF%B9redis%E4%BF%A1%E6%81%AF%E8%BF%9B%E8%A1%8C%E6%9F%A5%E7%9C%8B" class="external-link" rel="nofollow">4.对redis信息进行查看</a></strong></h3><p>命令：info</p><pre><code class="php">redis <span class="hljs-number" style="color: rgb(245,135,31);">10.10</span>.199.23:<span class="hljs-number" style="color: rgb(245,135,31);">6379</span>&gt; info Keyspace
+<span class="hljs-comment" style="color: rgb(142,144,140);"># Keyspace</span>
+db0:keys=<span class="hljs-number" style="color: rgb(245,135,31);">2186546</span>,expires=<span class="hljs-number" style="color: rgb(245,135,31);">52414</span>,avg_ttl=<span class="hljs-number" style="color: rgb(245,135,31);">991219500</span>
+db1:keys=<span class="hljs-number" style="color: rgb(245,135,31);">469469</span>,expires=<span class="hljs-number" style="color: rgb(245,135,31);">0</span>,avg_ttl=<span class="hljs-number" style="color: rgb(245,135,31);">0</span>
+db2:keys=<span class="hljs-number" style="color: rgb(245,135,31);">9904522</span>,expires=<span class="hljs-number" style="color: rgb(245,135,31);">0</span>,avg_ttl=<span class="hljs-number" style="color: rgb(245,135,31);">0</span>
+</code></pre><p>发现目前总量1200w不同key，仅有5w左右设定了过期时间，由此会造成，在使用类似<code>keys CRONTAB_HOMEWORK_*</code>&nbsp;命令时，会遍历庞大redis-key列表，导致redis负载上升</p><h2 id="id-关于redis负载报警的追查-二.todo的工作(11-06)"><a href="file:///C:/Users/YUSHAOLONG/Desktop/%E4%BD%9C%E4%B8%9A%E7%9B%92%E5%AD%90/201711/redis%E9%97%AE%E9%A2%98/redis.html#%E4%BA%8C.todo%E7%9A%84%E5%B7%A5%E4%BD%9C" class="external-link" rel="nofollow">二.todo的工作</a>(11-06)</h2><p>1.对于慢查询slow log中的key来源进行api追踪，对追踪到的api进行优化</p><ul><li>优先对如下keys进行优化，需要@QA排期进行测试，RD会对优化后结果进行持续关注<pre class="php hljs"><code class="php">CRONTAB_HOMEWORK_*
+QUESTION_kbox_base_relate_courseassistquestion_*
+</code></pre></li></ul><p>2.对未设定过期时间的key,采取一定的措施：1.删除，2.加过期时间</p><ul><li>对redis-key进行业务场景梳理，并得出目前现有key的场景列表@RD,此操作需要对线上redis进行数据采集,预估时间2小时，会选择在流量低峰期进行，可能会造成redis继续报警，请保持镇定@QA@OP</li><li>根据场景列表，进行线上redis删除或者加过期时间的操作@RD</li><li>对现有的接口加必要的缓存过期时间</li></ul><p>&nbsp;</p><h2 id="id-关于redis负载报警的追查-三.工作进展：(11-08)">三.工作进展：(11-08)</h2><p>对于作业盒子的redis空间使用进行整理后，需要着手处理redis-db0和redis-db2两个库，已经实施的方案如下：</p><h4 id="id-关于redis负载报警的追查-1.针对redis-db0操作：（done）"><span style="color: rgb(255,0,0);"><strong>1.针对redis-db0操作：</strong>（done）</span></h4><p>redis-db0库主要用于作业盒子线上业务支持，目前key总量215w, 其中210w未设定过期时间。 对未设定过期时间的key进行不同场景梳理，以及与@尚杰@王超@碧川沟通后，对db0已采用如下方案解决 ：</p><ul><li>1.重构API层面对redis的遍历查询操作，类似&nbsp;<code>keys CRONTAB_HOMEWORK_*</code>这种造成redis 慢查询的请求已经被优化，优化的key列表如下：<pre class="php hljs"><code class="php">CRONTAB_HOMEWORK_*
+QUESTION_*
+</code></pre></li><li>2.对部分API层面生成但未加入过期时间的redis-key，加入过期时间 ：<pre class="php hljs"><code class="php">GYM_EN_EXPERIENCE_DAILY_  加<span class="hljs-number" style="color: rgb(245,135,31);">24</span>小时过期时间
+GYM_WP_TRAIN_TIME_DAILY_  加<span class="hljs-number" style="color: rgb(245,135,31);">24</span>小时过期时间
+V2_GYM_PK_STATUS_         加<span class="hljs-number" style="color: rgb(245,135,31);">24</span>小时过期时间
+</code></pre></li><li>3.对当前业务中不再使用的redis-key(如PK竞技场，已经过期的邀请活动等业务产生的key)，设定24小时过期时间,总计140w左右</li></ul><p><span style="color: rgb(255,0,0);"><strong>2.针对redis-db2操作：</strong>（done）</span></p><p>redis-db2库主要用于支持@碧川的题库数据，总量990w，全部未设定过期时间。每天有定时脚本进行数据刷入操作，大概时间段凌晨2:00-上午9:00，跟阿碧沟通后:</p><ul><li>优化前的刷题方案：<pre class="php hljs"><code class="php">每次刷题之前，执行诸如 keys Homework_* 操作，删除之前的redis-key，再刷入新的题库数据，此操作会遍历庞大的redis-key列表，导致redis负载上升，
+</code></pre></li><li>优化后的刷题方案：<pre class="php hljs"><code class="php">刷入新的题库数据时，对题库的 key设定<span class="hljs-number" style="color: rgb(245,135,31);">24</span>小时过期,让其自动删除,不再执行诸如 keys Homework_* 操作
+</code></pre></li></ul><h2 id="id-关于redis负载报警的追查-四.后续建议"><a href="file:///C:/users/yushao~1/appdata/local/temp/tmp71i93s.htm#%E5%9B%9B.%E5%90%8E%E7%BB%AD%E5%BB%BA%E8%AE%AE" class="external-link" rel="nofollow">四.后续建议</a></h2><p>为了更好的使用redis,以及提高自我编码的规范意识，现提出建议如下：</p><ul><li><strong>1.业务中的redis-key必须设定失效时间,特殊场景要进行内部审核</strong></li><li><strong>2.业务中redis操作不允许使用 诸如&nbsp;<code>keys QUESTION_* 等</code>.</strong></li></ul><p><strong><br></strong></p><p><strong><br></strong></p>
+
+                
+        
+    
+        </div>
+
+        <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051"
+    dc:identifier="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051"
+    dc:title="关于redis负载报警的追查"
+    trackback:ping="http://la.knowbox.cn:8090/rpc/trackback/4558051"/>
+</rdf:RDF>
+-->
+
+                        
+    
+
+
+
+<div id="likes-and-labels-container"><div id="likes-section"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051" class="like-button">赞</a><span class="like-summary">成为第一个赞同者</span></div><div id="labels-section" class="pageSection group">
+    <div class="labels-section-content content-column" entityid="4558051" entitytype="page">
+	<div class="labels-content">
+		
+    <ul class="label-list label-list-right  has-pen">
+            <li class="no-labels-message">
+            无标签
+        </li>
+                <li class="labels-edit-container">
+            <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="show-labels-editor editor-icon" title="编辑标签 (l)">
+                <span class="icon icon-edit">编辑标签</span>
+            </a>
+        </li>
+        </ul>
+
+    </div>
+</div></div></div>
+        
+		
+            
+
+
+
+
+            
+    
+
+
+
+
+
+
+
+
+                    
+    
+<div id="comments-section" class="pageSection group">
+            <div class="section-header">
+            <h2 id="comments-section-title" class="section-title">
+                                    评论
+                            </h2>
+        </div>
+    
+    
+    
+                            <ol class="comment-threads top-level" id="page-comments">
+                        <li id="comment-thread-9798058" class="comment-thread">
+                    <div class="comment  " id="comment-9798058">
+                <p class="comment-user-logo">
+                    <a class="userLogoLink userlink-1" data-username="lishan" href="http://la.knowbox.cn:8090/display/~lishan" title="" data-user-hover-bound="true">
+               <img class="userLogo logo" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/lishan-73312-pp-b026b69608c465adcada2502d33d630f.jpg" alt="用户图标: lishan" title="">
+           </a>                </p>
+                <div class="comment-header">
+                    <h4 class="author">    <a href="http://la.knowbox.cn:8090/display/~lishan" class="url fn confluence-userlink userlink-1" data-username="lishan" title="" data-user-hover-bound="true">lishan</a> 发表：</h4>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content wiki-content">
+                        <p>么么哒</p>
+                    </div>
+                    <div class="comment-actions">
+                                                      <ul class="comment-actions-secondary">
+                                                                      <li class="first comment-permalink"><a title="指向此评论的永久链接" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;focusedCommentId=9798058#comment-9798058" id="comment-permalink-9798058"><span>永久链接</span></a></li>
+            </ul>
+                                <ul class="comment-actions-primary">
+                                                                      <li class="first action-reply-comment"><a href="http://la.knowbox.cn:8090/pages/replycomment.action?commentId=9798058&amp;pageId=4558051" id="reply-comment-9798058"><span>回复</span></a></li>
+                                                                      <li class=" comment-action-edit"><a href="http://la.knowbox.cn:8090/pages/editcomment.action?commentId=9798058&amp;pageId=4558051" id="edit-comment-9798058"><span>编辑</span></a></li>
+                                                                      <li class=" comment-action-remove"><a href="http://la.knowbox.cn:8090/pages/removecomment.action?commentId=9798058&amp;pageId=4558051&amp;atl_token=55925c099c1bdcc106a0765062240739c8ece748" id="remove-comment-9798058"><span>删除</span></a></li>
+                                                                      <li class="comment-action-like"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051" class="like-button">赞</a><span class="like-summary"></span></li><li class=" comment-date"><a title="八月 12, 2018 17:49" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;focusedCommentId=9798058#comment-9798058"><span>八月 12, 2018</span></a></li>
+            </ul>
+                      </div>
+                </div>
+            </div>
+
+            <!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+         <rdf:Description
+    rdf:about="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;focusedCommentId=9798058#comment-9798058"
+    dc:identifier="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;focusedCommentId=9798058#comment-9798058"
+    dc:title="关于redis负载报警的追查"
+    trackback:ping="http://la.knowbox.cn:8090/rpc/trackback/9798058"/>
+</rdf:RDF>
+-->
+
+                    
+                                </li>
+                </ol>
+    
+            <div class="bottom-comment-panels comment-panels">
+                                    
+    
+
+                    
+    
+
+
+    
+
+<div class="quick-comment-container comment add odd"><p class="comment-user-logo"><a class="userLogoLink userlink-2" data-username="admin" href="http://la.knowbox.cn:8090/users/editmyprofilepicture.action" title="" data-user-hover-bound="true"><img class="userLogo logo defaultLogo" src="./关于redis负载报警的追查 - 技术文档·盒子团队 - Confluence_files/add_profile_pic.png" alt="用户图标: 添加头像" title=""></a></p><div class="quick-comment-vertical-spacer"></div><div class="quick-comment-body"><div class="quick-comment-loading-container" style="display:none;"><p class="quick-comment-loading-message">正在加载编辑器</p></div><div id="editor-messages"></div><div id="all-messages"></div><form style="display:block;" class="quick-comment-form aui" method="post" name="inlinecommentform" action="http://la.knowbox.cn:8090/pages/doaddcomment.action?pageId=4558051"><div title="添加评论 (m)" class="quick-comment-prompt"><span>编写评论...</span></div></form></div></div>
+
+    
+            </div>
+    
+                        <div id="comments-actions" class="aui-toolbar noprint" style="display: none;">
+                <p class="toolbar-group">
+                    <span class="toolbar-item"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051&amp;showComments=true&amp;showCommentArea=true#addcomment" id="add-comment-rte" accesskey="m" class="toolbar-trigger">添加评论</a></span>
+                </p>
+            </div>
+            </div>
+
+
+            
+</div>
+
+
+    
+
+
+
+
+    
+    
+
+    
+    
+    
+
+
+    
+<div id="space-tools-web-items" class="hidden">
+                <div data-label="概览" data-href="/spaces/viewspacesummary.action?key=techZyhz">概览</div>
+            <div data-label="权限" data-href="/spaces/spacepermissions.action?key=techZyhz">权限</div>
+            <div data-label="内容工具" data-href="/pages/templates2/listpagetemplates.action?key=techZyhz">内容工具</div>
+            <div data-label="外观" data-href="/spaces/choosetheme.action?key=techZyhz">外观</div>
+            <div data-label="整合" data-href="/spaces/listentitylinks.action?typeId=com.atlassian.applinks.api.application.confluence.ConfluenceSpaceEntityType&amp;key=techZyhz">整合</div>
+    </div>
+
+
+
+
+    </div><!-- \#main -->
+        
+    
+        
+            <div id="footer" style="margin-left: 285px;">
+
+    <section class="footer-body">
+
+                        
+    
+
+    <ul id="poweredby">
+        <li class="noprint">由以下机构提供技术支持：<a href="http://www.atlassian.com/software/confluence" class="hover-footer-link">Atlassian Confluence</a> <span id="footer-build-information">5.4.4</span>, <a href="http://www.atlassian.com/software/confluence/overview/team-collaboration-software?utm_source=confluence-footer" class="hover-footer-link">Team Collaboration Software</a></li>
+        <li class="print-only">由以下机构打印：Atlassian Confluence 5.4.4, Team Collaboration Software.</li>
+        <li class="noprint"><a href="http://jira.atlassian.com/secure/BrowseProject.jspa?id=10470" class="hover-footer-link">报告缺陷</a></li>
+        <li class="noprint"><a href="http://www.atlassian.com/about/connected.jsp?s_kwcid=Confluence-stayintouch" class="hover-footer-link">Atlassian 新闻</a></li>
+    </ul>
+
+    
+
+            
+    
+    </section>
+
+</div>
+
+            
+    
+</div>
+
+</div><!-- \#full-height-container -->
+</div><!-- \#page -->
+
+
+<div id="content-hover-0" class="ajs-content-hover"><div class="contents" style="width: 300px;"></div></div><div id="content-hover-1" class="ajs-content-hover"><div class="contents" style="width: 300px;"></div></div><div id="content-hover-2" class="ajs-content-hover"><div class="contents" style="width: 300px;"></div></div><div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:;" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:;" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div><div id="content-hover-shadow" style="display: none;"><div class="tl"></div><div class="tr"></div><div class="l"></div><div class="r"></div><div class="bl"></div><div class="br"></div><div class="b"></div></div><div id="cw-notification-container"></div><div class="qr-notice aui-message warning"></div><div id="fileuploadShim" style="position: relative; z-index: 0;"></div><div id="p1cqt03vfic601s9is0ku091bgt0_html5_container" class="plupload html5" style="position: absolute; background: transparent; width: 1422px; height: 0px; overflow: hidden; z-index: -1; opacity: 0; top: 3043px; left: 0px;"><input id="p1cqt03vfic601s9is0ku091bgt0_html5" style="font-size: 999px; position: absolute; width: 100%; height: 100%;" type="file" accept="" multiple="multiple"></div><div id="editor-preload-container" style="display: none;">
+<div class="hidden">
+        
+
+
+<content tag="breadcrumbs">
+    
+    
+    <ol id="quickedit-breadcrumbs">
+                    
+                
+        <li class="first">
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/display/techZyhz">技术文档·盒子团队</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/collector/pages.action?key=techZyhz">页面</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=721103">TECH·作业盒子</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class=""><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=2823701">技术分享</a></span>
+                            
+                
+        </li><li>
+                
+
+                    <span class="edited-page-title"><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051">关于redis负载报警的追查</a></span>
+                </li></ol>
+
+</content>
+</div>
+
+
+<div id="editor-precursor">
+    <div class="cell">
+    
+        <div id="content-title-div">
+                                                                                                                                        
+
+<div class="field-group
+    ">
+    <label id="content-title-label" for="content-title">
+    
+        </label>
+
+                <input type="text" name="title" id="content-title" value="关于redis负载报警的追查" tabindex="1" class="text   pagetitle" autocomplete="off" placeholder="">
+                      </div>        </div>
+
+        <div id="editor-messages">
+            
+                                
+<div id="heartbeat-div" class="hidden">
+    <div class="aui-message warning closeable">
+            <span class="aui-icon icon-warning"></span>
+        当前页面正在被<span id="other-users-span"></span>编辑。
+    </div>
+</div>
+
+
+        </div>
+        <div id="all-messages">
+            
+<div id="action-messages">
+                        </div>
+        </div>
+    </div>
+</div>                                                                                        
+
+<script type="text/x-template" title="editor-css">
+    <link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1.0/_/download/batch/confluence.web.resources:panel-styles/confluence.web.resources:panel-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1.0/_/download/batch/confluence.web.resources:content-styles/confluence.web.resources:content-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.1.3/_/download/batch/com.atlassian.auiplugin:aui-page-typography/com.atlassian.auiplugin:aui-page-typography.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.1.3/_/download/batch/com.atlassian.auiplugin:aui-avatars/com.atlassian.auiplugin:aui-avatars.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.1.3/_/download/batch/com.atlassian.auiplugin:aui-page-layout/com.atlassian.auiplugin:aui-page-layout.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_/download/batch/com.atlassian.confluence.editor:editor-content-styles/com.atlassian.confluence.editor:editor-content-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1.0.20/_/download/batch/com.atlassian.confluence.confluence-editor-hide-tools:confluence-editor-hide-tools-iframe-resources/com.atlassian.confluence.confluence-editor-hide-tools:confluence-editor-hide-tools-iframe-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.1.3/_/download/batch/com.atlassian.auiplugin:aui-lozenge/com.atlassian.auiplugin:aui-lozenge.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/2.15/_/download/batch/com.atlassian.confluence.plugins.status-macro:view_content_status/com.atlassian.confluence.plugins.status-macro:view_content_status.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/2.15/_/download/batch/com.atlassian.confluence.plugins.status-macro:editor_content_status/com.atlassian.confluence.plugins.status-macro:editor_content_status.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_/download/batch/com.atlassian.confluence.plugins.confluence-templates:variable-editor-content-styles/com.atlassian.confluence.plugins.confluence-templates:variable-editor-content-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/3.6.10/_/download/batch/confluence.extra.attachments:attachments-css/confluence.extra.attachments:attachments-css.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_/download/batch/com.atlassian.confluence.plugins.confluence-inline-tasks:inline-tasks-styles/com.atlassian.confluence.plugins.confluence-inline-tasks:inline-tasks-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_/download/batch/com.atlassian.confluence.plugins.confluence-page-layout:editor-pagelayout-content-styles/com.atlassian.confluence.plugins.confluence-page-layout:editor-pagelayout-content-styles.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/2.2.10/_/download/batch/com.atlassian.confluence.plugins.confluence-business-blueprints:sharelinks-urlmacro-editor-resources/com.atlassian.confluence.plugins.confluence-business-blueprints:sharelinks-urlmacro-editor-resources.css" media="all">
+<link type="text/css" rel="stylesheet" href="/s/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1/_/styles/colors.css?spaceKey=techZyhz" media="all">
+<link type="text/css" rel="stylesheet" href="/s/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/1.0/_/download/resources/com.atlassian.confluence.themes.default:styles/default-theme.css" media="all">
+
+</script>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+<div class="editor-container">
+
+        
+            <div id="image-properties-tab-items" class="hidden">
+                <div title="效果" data-weight="10">image-effects</div>
+            <div title="标题" data-weight="20">image-attributes</div>
+    </div>
+            
+
+<div id="link-browser-tab-items" class="hidden">
+                <div title="搜索" data-weight="10">search</div>
+            <div title="最近浏览过" data-weight="20">recentlyviewed</div>
+            <div title="附件" data-weight="30">attachments</div>
+            <div title="Web链接" data-weight="40">weblink</div>
+            <div title="高级" data-weight="50">advanced</div>
+    </div>
+            
+
+
+
+
+
+
+
+
+
+
+
+        <div id="toolbar">
+        <div id="rte-toolbar" class="aui-toolbar aui-toolbar2">
+
+            <div class="aui-toolbar2-primary">
+                <ul class="aui-buttons">
+                                        <li id="format-dropdown" class="toolbar-item toolbar-dropdown">
+                        <div class="aui-dd-parent">
+                            <a id="format-dropdown-display" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="toolbar-trigger aui-dd-trigger aui-button" data-control-id="formatselect">
+                                <span class="dropdown-text">正文</span>
+                                    <span class="icon icon-dropdown "></span>
+                            </a>
+                            <ul id="format-dropdown-display-menu" class="aui-dropdown hidden">
+                                    <li class="dropdown-item format-p" data-format="p" data-tooltip="正文 (Ctrl+0)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">正文</a>
+    </li>
+                                    <li class="dropdown-item format-h1" data-format="h1" data-tooltip="标题 1 (Ctrl+1)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 1</a>
+    </li>
+                                    <li class="dropdown-item format-h2" data-format="h2" data-tooltip="标题 2 (Ctrl+2)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 2</a>
+    </li>
+                                    <li class="dropdown-item format-h3" data-format="h3" data-tooltip="标题 3 (Ctrl+3)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 3</a>
+    </li>
+                                    <li class="dropdown-item format-h4" data-format="h4" data-tooltip="标题 4 (Ctrl+4)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 4</a>
+    </li>
+                                    <li class="dropdown-item format-h5" data-format="h5" data-tooltip="标题 5 (Ctrl+5)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 5</a>
+    </li>
+                                    <li class="dropdown-item format-h6" data-format="h6" data-tooltip="标题 6 (Ctrl+6)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">标题 6</a>
+    </li>
+                                    <li class="dropdown-item format-pre" data-format="pre" data-tooltip="预格式化 (Ctrl+7)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">预格式化</a>
+    </li>
+                                    <li class="dropdown-item format-blockquote" data-format="blockquote" data-tooltip="引用 (Ctrl+8)">
+        <a class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">引用</a>
+    </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="aui-buttons">
+                    
+                <li class="toolbar-item aui-button" id="rte-button-bold" data-tooltip="粗体 (Ctrl+B)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="bold">
+                <span class="icon icon-bold ">粗体</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-italic" data-tooltip="斜体 (Ctrl+I)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="italic">
+                <span class="icon icon-italic ">斜体</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-underline" data-tooltip="下划线 (Ctrl+U)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="underline">
+                <span class="icon icon-underline ">下划线</span>
+        </a>
+    </li>
+                                        <li id="color-picker-control" class="toolbar-item toolbar-splitbutton">
+                        <a class="toolbar-trigger aui-button" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" id="rte-button-color" data-color="003366" data-tooltip="颜色">
+                                <span class="icon icon-textcolor ">颜色选取器</span>
+                            <span class="selected-color"></span>
+                        </a>
+                        <div class="aui-dd-parent">
+                            <a class="toolbar-trigger aui-dd-trigger aui-button" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" id="rte-button-color-selector" data-control-id="colorSelector" data-tooltip="更多颜色">
+                                    <span class="icon icon-dropdown ">更多颜色</span>
+                            </a>
+                            <div class="color-picker-container">
+                                <div class="color-picker aui-dropdown hidden">
+                                    <ul>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #000000" data-color="000000">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #993300" data-color="993300">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #333300" data-color="333300">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #003300" data-color="003300">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #003366" data-color="003366">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #000080" data-color="000080">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #333399" data-color="333399">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #333333" data-color="333333">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #800000" data-color="800000">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FF6600" data-color="FF6600">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #808000" data-color="808000">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #008000" data-color="008000">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #008080" data-color="008080">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #0000FF" data-color="0000FF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #666699" data-color="666699">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #808080" data-color="808080">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FF0000" data-color="FF0000">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FF9900" data-color="FF9900">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #99CC00" data-color="99CC00">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #339966" data-color="339966">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #33CCCC" data-color="33CCCC">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #3366FF" data-color="3366FF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #800080" data-color="800080">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #999999" data-color="999999">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FF00FF" data-color="FF00FF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FFCC00" data-color="FFCC00">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FFFF00" data-color="FFFF00">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #00FF00" data-color="00FF00">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #00FFFF" data-color="00FFFF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #00CCFF" data-color="00CCFF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #993366" data-color="993366">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #C0C0C0" data-color="C0C0C0">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FF99CC" data-color="FF99CC">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FFCC99" data-color="FFCC99">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FFFF99" data-color="FFFF99">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #CCFFCC" data-color="CCFFCC">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #CCFFFF" data-color="CCFFFF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #99CCFF" data-color="99CCFF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #CC99FF" data-color="CC99FF">&nbsp;</a></li>
+            <li><a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" style="background-color: #FFFFFF" data-color="FFFFFF">&nbsp;</a></li>
+    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li id="more-menu" class="toolbar-item toolbar-dropdown">
+                        <div class="aui-dd-parent">
+                            <a id="rte-button-more" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="toolbar-trigger aui-dd-trigger aui-button" data-tooltip="更多">
+                                    <span class="icon icon-more ">格式</span>
+                                    <span class="icon icon-dropdown "></span>
+                            </a>
+                            <div id="rte-button-more-menu" class="aui-dropdown grouped hidden">
+                                <div class="grouped-dropdown-item">
+                                    <ul>
+                                                                <li class="dropdown-item more-menu-trigger" data-control-id="strikethrough" data-tooltip="删除线 (Ctrl+Shift+S)">
+        <a id="rte-strikethrough" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon icon-check hidden"></span>
+删除线
+        </a>
+    </li>
+                                                                 <li class="dropdown-item more-menu-trigger" data-control-id="sub" data-tooltip="">
+        <a id="rte-sub" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon icon-check hidden"></span>
+下标
+        </a>
+    </li>
+                                                                 <li class="dropdown-item more-menu-trigger" data-control-id="sup" data-tooltip="">
+        <a id="rte-sup" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon icon-check hidden"></span>
+上标
+        </a>
+    </li>
+                                                        <li class="dropdown-item more-menu-trigger" data-control-id="monospace" data-tooltip="用等宽字体格式化文本">
+        <a id="rte-monospace" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon icon-check hidden"></span>
+等宽
+        </a>
+    </li>
+
+                                                                                                                    </ul>
+                                </div>
+                                <div class="grouped-dropdown-item">
+                                    <ul>
+                                            <li class="dropdown-item more-menu-trigger no-icon" data-format="removeformat" data-tooltip="当前选中文本清除格式">
+        <a id="rte-removeformat" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+            清除格式
+        </a>
+    </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+
+                <ul class="aui-buttons">
+                    
+                <li class="toolbar-item aui-button" id="rte-button-bullist" data-tooltip="无序列表 (Ctrl+Shift+B)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="bullist">
+                <span class="icon icon-bullist ">无序列表</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-numlist" data-tooltip="有序列表 (Ctrl+Shift+N)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="numlist">
+                <span class="icon icon-numlist ">有序列表</span>
+        </a>
+    </li>
+                                            
+                <li class="toolbar-item aui-button" id="rte-button-tasklist" data-tooltip="任务列表 ( )">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="tasklist">
+                <span class="icon icon-tasklist ">任务列表</span>
+        </a>
+    </li>
+                                    </ul>
+
+                <ul class="aui-buttons">
+                    
+                <li class="toolbar-item aui-button" id="rte-button-outdent" data-tooltip="减小缩进">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="outdent">
+                <span class="icon icon-outdent ">减小缩进</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-indent" data-tooltip="增大缩进">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="indent">
+                <span class="icon icon-indent ">增大缩进</span>
+        </a>
+    </li>
+                </ul>
+
+                <ul class="aui-buttons">
+                    
+                <li class="toolbar-item aui-button" id="rte-button-justifyleft" data-tooltip="左对齐">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="justifyleft">
+                <span class="icon icon-justifyleft ">左对齐</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-justifycenter" data-tooltip="居中">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="justifycenter">
+                <span class="icon icon-justifycenter ">居中</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-justifyright" data-tooltip="右对齐">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="justifyright">
+                <span class="icon icon-justifyright ">右对齐</span>
+        </a>
+    </li>
+                </ul>
+
+                                <ul class="aui-buttons hidden" id="page-layout-2-group">
+                    <li id="page-layout-2" class="toolbar-item" data-tooltip="页面布局">
+                        <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="aui-button toolbar-trigger" id="rte-button-pagelayout-2">
+                                <span class="icon icon-layout ">页面布局</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="aui-buttons">
+                    <li class="toolbar-item" data-tooltip="插入链接 (Ctrl+K)">
+                        <a id="rte-button-link" class="toolbar-trigger aui-button" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="linkbrowserButton">
+                                <span class="icon icon-link "></span>
+                            <span class="trigger-text">链接</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="aui-buttons">
+                    <li class="toolbar-item toolbar-dropdown" id="insert-table-dropdown">
+                        <div class="aui-dd-parent">
+                            <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="toolbar-trigger aui-dd-trigger aui-button" id="rte-button-insert-table" data-tooltip="插入表格">
+                                    <span class="icon icon-table "></span>
+                                <span class="dropdown-text">表格</span>
+                                    <span class="icon icon-dropdown "></span>
+                            </a>
+
+                            <div id="table-picker-container" class="hidden">
+                                <div class="table-picker-box" data-tooltip="按住 SHIFT键，创建无表头表格 。">
+                                    <div class="table-picker-background">
+                                        <div class="picker picker-cell"></div>
+                                        <div class="picker picker-heading heading"></div>
+                                        <div class="picker picker-selected-cell"></div>
+                                        <div class="picker picker-selected-heading heading"></div>
+                                    </div>
+                                    <p class="desc"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                
+                
+                <ul class="aui-buttons">
+                    <li class="toolbar-item toolbar-dropdown" id="insert-menu">
+                        <div class="aui-dd-parent">
+                            <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="toolbar-trigger aui-dd-trigger aui-button" id="rte-button-insert" data-tooltip="插入更多内容">
+                                    <span class="icon icon-insert "></span>
+                                <span class="dropdown-text">插入</span>
+                                    <span class="icon icon-dropdown "></span>
+                            </a>
+
+                            <div id="insert-menu-options" class="aui-dropdown grouped hidden">
+                                <div class="grouped-dropdown-item">
+                                    <span class="assistive">Insert content</span>
+                                    <ul id="content-insert-list">
+                                        
+        
+        <li class="dropdown-item content-image" data-command="mceConfimage" data-tooltip="插入图像 (Ctrl+M)">
+        <a id="rte-insert-image" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 图片
+        </a>
+    </li>
+                                        
+        
+        <li class="dropdown-item content-link" data-control-id="linkbrowserButton" data-tooltip="插入链接 (Ctrl+K)">
+        <a id="rte-insert-link" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 链接
+        </a>
+    </li>
+                                                                                    
+    
+        <li class="dropdown-item content-attachment" data-command="mceConfAttachments" data-tooltip="插入附件">
+        <a id="rte-insert-attachment" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 附件
+        </a>
+    </li>
+                                                                                
+    
+        <li class="dropdown-item content-symbol" data-command="confCharmap" data-tooltip="插入符号">
+        <a id="rte-insert-symbol" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 符号
+        </a>
+    </li>
+                                        
+    
+        <li class="dropdown-item content-emoticon" data-command="mceEmotion" data-tooltip="插入表情">
+        <a id="rte-insert-emoticon" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 表情符号
+        </a>
+    </li>
+                                        
+        
+        <li class="dropdown-item content-wikimarkup" data-command="InsertWikiMarkup" data-tooltip="插入Wiki标记 (Ctrl+Shift+D)">
+        <a id="rte-insert-wikimarkup" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ Wiki标记
+        </a>
+    </li>
+                                        
+    
+        <li class="dropdown-item content-hr" data-command="InsertHorizontalRule" data-tooltip="插入水平线(----)">
+        <a id="rte-insert-hr" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 水平线
+        </a>
+    </li>
+                                                                                    
+        
+        <li class="dropdown-item content-tasklist" data-command="InsertInlineTaskListNoToggle" data-tooltip="插入任务列表 ( )">
+        <a id="rte-insert-tasklist" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 任务列表
+        </a>
+    </li>
+                                                                            </ul>
+                                </div>
+                                <div class="grouped-dropdown-item">
+                                    <span class="assistive">Insert macro</span>
+                                    <ul id="macro-insert-list">
+                                                                                                                                                                                <li class="dropdown-item macro-insertmention-button" data-macro-name="insertmention-button" data-tooltip="插入&#39;用户提及&#39;宏">
+        <a id="insertmention-button" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 用户提及
+        </a>
+    </li>
+                                                                                                <li class="dropdown-item macro-jiralink" data-macro-name="jiralink" data-tooltip="插入&#39;JIRA事务&#39;宏">
+        <a id="jiralink" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ JIRA事务
+        </a>
+    </li>
+                                                                                                <li class="dropdown-item macro-info" data-macro-name="info" data-tooltip="插入&#39;信息&#39;宏">
+        <a id="info" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 信息
+        </a>
+    </li>
+                                                                                                <li class="dropdown-item macro-status" data-macro-name="status" data-tooltip="插入&#39;状态&#39;宏">
+        <a id="status" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 状态
+        </a>
+    </li>
+                                                                                                <li class="dropdown-item macro-gallery" data-macro-name="gallery" data-tooltip="插入&#39;画廊&#39;宏">
+        <a id="gallery" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 画廊
+        </a>
+    </li>
+                                                                                                <li class="dropdown-item macro-toc" data-macro-name="toc" data-tooltip="插入&#39;目录&#39;宏">
+        <a id="toc" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 目录
+        </a>
+    </li>
+                                                                                                                            
+        
+        <li class="dropdown-item content-macro" data-command="mceConfMacroBrowser" data-tooltip="打开宏浏览器 (Ctrl+Shift+A)">
+        <a id="rte-insert-macro" class="item-link" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#">
+                <span class="icon "></span>
+ 其它宏
+        </a>
+    </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                                <ul class="aui-buttons">
+                    <li id="pagelayout-menu" class="toolbar-item toolbar-dropdown">
+                        <div class="aui-dd-parent">
+                            <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="toolbar-trigger aui-dd-trigger aui-button" id="rte-button-pagelayout" data-tooltip="页面布局">
+                                    <span class="icon icon-layout pagelayout-default">页面布局</span>
+                                    <span class="icon icon-dropdown "></span>
+                            </a>
+
+                            <ul id="pagelayout-menu-options" class="aui-dropdown hidden">
+                                <li class="dropdown-item" data-tooltip="No layout">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-none&quot;, &quot;columns&quot;: 0   }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-none">No layout</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏 (简单)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two-simple&quot;, &quot;columns&quot;: [&quot;&quot;, &quot;&quot;]   }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two-simple">两栏 (简单)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏 (简单，左侧栏)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two-simple-left&quot;, &quot;columns&quot;: [&quot;aside&quot;, &quot;large&quot;]   }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two-simple-left">两栏 (简单，左侧栏)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏 (简单，右侧栏)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two-simple-right&quot;, &quot;columns&quot;: [&quot;large&quot;, &quot;aside&quot;]   }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two-simple-right">两栏 (简单，右侧栏)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="三栏 (简单)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-three-simple&quot;, &quot;columns&quot;: [&quot;&quot;, &quot;&quot;, &quot;&quot;]   }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-three-simple">三栏 (简单)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two&quot;, &quot;columns&quot;: [&quot;&quot;, &quot;&quot;] , &quot;header&quot;: true  , &quot;footer&quot;:true  }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two">两栏</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏 (左侧栏)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two-left&quot;, &quot;columns&quot;: [&quot;aside&quot;, &quot;large&quot;] , &quot;header&quot;: true  , &quot;footer&quot;:true  }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two-left">两栏 (左侧栏)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="两栏 (右侧栏)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-two-right&quot;, &quot;columns&quot;: [&quot;large&quot;, &quot;aside&quot;] , &quot;header&quot;: true  , &quot;footer&quot;:true  }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-two-right">两栏 (右侧栏)</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="三栏">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-three&quot;, &quot;columns&quot;: [&quot;&quot;, &quot;&quot;, &quot;&quot;] , &quot;header&quot;: true  , &quot;footer&quot;:true  }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-three">三栏</span>
+    </a>
+</li>
+                                <li class="dropdown-item" data-tooltip="三栏 (左边和右侧栏)">
+    <a href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" class="item-link" data-atlassian-layout="{&quot;name&quot;: &quot;pagelayout-three-sidebars&quot;, &quot;columns&quot;: [&quot;sidebars&quot;, &quot;large&quot;, &quot;sidebars&quot;] , &quot;header&quot;: true  , &quot;footer&quot;:true  }">
+            <span class="icon icon-check hidden"></span>
+            <span class="icon icon-layout pagelayout-three-sidebars">三栏 (左边和右侧栏)</span>
+    </a>
+</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                
+                <ul class="aui-buttons">
+                    
+                <li class="toolbar-item aui-button" id="rte-button-undo" data-tooltip="回退 (Ctrl+Z)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="undo">
+                <span class="icon icon-undo ">回退</span>
+        </a>
+    </li>
+                    
+                <li class="toolbar-item aui-button" id="rte-button-redo" data-tooltip="重做 (Ctrl+Y)">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="redo">
+                <span class="icon icon-redo ">重做</span>
+        </a>
+    </li>
+                </ul>
+
+                
+            </div>            <div class="aui-toolbar2-secondary">
+                <ul class="aui-buttons">
+                        <li class="toolbar-item aui-button" id="rte-button-searchreplace" data-tooltip="查找/替换">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="searchreplace">
+                <span class="icon icon-searchreplace ">查找/替换</span>
+        </a>
+    </li>
+                </ul>
+                <ul class="aui-buttons">
+                        <li class="toolbar-item aui-button" id="rte-button-help" data-tooltip="帮助">
+        <a class="toolbar-trigger" href="http://la.knowbox.cn:8090/pages/viewpage.action?pageId=4558051#" data-control-id="help">
+                <span class="icon icon-help ">键盘快捷方式帮助</span>
+        </a>
+    </li>
+                </ul>
+            </div>        </div>    </div>
+    <div id="wysiwyg" class="resize">
+        <div id="rte" class="cell editor-default">
+            <textarea id="wysiwygTextarea" name="wysiwygContent" class="hidden tinymce-editor"></textarea>
+        </div>
+    </div>
+    <div id="editor-html-source-container" class="hidden">
+        <textarea id="editor-html-source" class="monospaceInput"></textarea>
+    </div>
+
+    <div id="preview">
+                        <div id="previewArea" class="cell">
+        </div>
+    </div>
+
+            
+
+<div id="savebar-container">
+    <div id="rte-savebar" class="aui-toolbar aui-toolbar2">
+
+                    
+        
+        <div class="toolbar-split toolbar-split-row">
+            <div class="toolbar-split toolbar-split-left">
+            <div class="aui-buttons">
+                                                                                            <button class="aui-button" type="button" data-tooltip="编辑页面权限" id="rte-button-restrictions">
+                        <span class="icon icon-unrestricted"></span>
+                        <span class="trigger-text">未限制</span>
+                    </button>
+                                                                            <button class="aui-button" type="button" data-tooltip="插入附件" id="rte-button-attachments">
+                        <span class="icon icon-attachment"></span>
+                        <span class="trigger-text">4 附件 发表：</span>
+                    </button>
+                                                                            <button class="aui-button" type="button" data-tooltip="编辑页标签" id="rte-button-labels">
+                        <span class="icon icon-labels"></span>
+                        <span class="trigger-text">标签</span>
+                    </button>
+                            </div>
+                    </div>            <div class="toolbar-split toolbar-split-right">
+                            <div class="aui-buttons" id="toolbar-group-minor-edit">
+                    <ul class="toolbar-group toolbar-group-watch-page" id="toolbar-group-watch-page-after-comment">
+                        <li class="toolbar-item">
+                            <input id="watchPage" name="watchPageAfterComment" value="true" type="checkbox">
+                            <label for="watchPage">关注此页面</label>
+                        </li>
+                    </ul>
+                                             <span class="rte-toolbar-comment toolbar-item">
+                            <input id="versionComment" name="versionComment" placeholder="变更了什么?" class="text" type="text" size="35">
+                            <label for="versionComment" class="assistive">变更了什么?</label>
+                        </span>
+                                                                 <span class="minor-edit toolbar-item">
+                            <input id="notifyWatchers" name="notifyWatchers" value="true" type="checkbox" checked="checked">
+                            <label for="notifyWatchers"><span>通知关注人</span></label>
+                        </span>
+                                    </div>
+            
+                    <div class="aui-buttons">
+                <span id="rte-spinner" class="toolbar-item">&nbsp;</span>
+            </div>
+            <div class="aui-buttons toolbar-group-edit assistive">
+                <button id="rte-button-edit" class="aui-button" title="Return To edit Mode" type="button">
+                    <span class="trigger-text">编辑</span>
+                </button>
+            </div>
+            <div class="aui-buttons toolbar-group-preview">
+                <button class="aui-button toolbar-item" id="rte-button-preview" title="预览" type="button">
+                    <span class="trigger-text">预览</span>
+                </button>
+            </div>
+
+        
+            <div class="save-button-container">
+                                                                                                                                                            <button class="aui-button aui-button-primary" type="submit" id="rte-button-publish" name="confirm" value="Save" title="保存">
+                            <span class="trigger-text">保存</span>
+                        </button>
+                                                </div>
+                                            <button class="toolbar-item-link aui-button aui-button-link" type="submit" id="rte-button-cancel" value="discard" name="cancel"><span class="trigger-text">取消</span></button>
+
+        </div>         </div>
+        <div class="toolbar-split toolbar-split-row" id="toolbar-hints-draft-status">
+            <div class="toolbar-split toolbar-split-right">
+                <div id="draft-status"></div>
+            </div>
+        </div>
+    </div> </div>
+
+    
+    
+</div>
+
+
+
+<script type="text/x-template" title="dynamic-editor-metadata">
+            <meta name="ajs-content-type" content="page">
+            <meta name="ajs-min-editor-height" content="150">
+            <meta name="ajs-editor-plugin-resource-prefix" content="/s/zh_CN-1988229788/4733/f235dd088df5682b0560ab6fc66ed22c9124c0be.1/5.4.4/_">
+            <meta name="ajs-num-attachments" content="4">
+            <meta name="ajs-auto-start" content="false">
+            <meta name="ajs-cancel-button-close-text" content="取消">
+            <meta name="ajs-content-id" content="4558051">
+            <meta name="ajs-action-locale" content="zh_CN">
+            <meta name="ajs-save-drafts" content="true">
+            <meta name="ajs-use-inline-tasks" content="true">
+            <meta name="ajs-heartbeat" content="true">
+            <meta name="ajs-cancel-button-discard-text" content="">
+            <meta name="ajs-draft-id" content="0">
+            <meta name="ajs-new-page" content="false">
+            <meta name="ajs-form-name" content="inlinecommentform">
+            <meta name="ajs-attachment-source-content-id" content="4558051">
+            <meta name="ajs-editor-mode" content="richtext">
+            <meta name="ajs-draft-type" content="page">
+            <meta name="ajs-existing-draft-id" content="0">
+            <meta name="ajs-can-attach-files" content="true">
+                
+            		    <meta name="ajs-max-thumb-width" content="300">
+		    <meta name="ajs-can-send-email" content="false">
+		    <meta name="ajs-is-dev-mode" content="false">
+		    <meta name="ajs-draft-save-interval" content="30000">
+		    <meta name="ajs-show-hidden-user-macros" content="true">
+		    <meta name="ajs-is-admin" content="true">
+		    <meta name="ajs-confluence.prefs.editor.disable.autocomplete" content="false">
+		    <meta name="ajs-confluence.prefs.editor.disable.autoformat" content="false">
+		    <meta name="ajs-heartbeat-interval" content="30000">
+	
+    </script>
+
+
+<div id="hidden-permission-fields" class="hidden">
+    <input id="viewPermissionsUsers" type="text" name="viewPermissionsUsers" value="">
+    <input id="editPermissionsUsers" type="text" name="editPermissionsUsers" value="">
+    <input id="viewPermissionsGroups" type="text" name="viewPermissionsGroups" value="">
+    <input id="editPermissionsGroups" type="text" name="editPermissionsGroups" value="">
+</div>
+
+<script type="text/x-template" title="tableForm">
+    <form id="tinymce-table-form" class="aui">
+        <div class="field-group">
+            <label for="rows">行</label>
+            <input id="rows" name="rows" type="text" size="3" autocomplete="off" value="{0}">
+        </div>
+        <div class="field-group">
+            <label for="cols">列</label>
+            <input id="cols" name="cols" type="text" size="3" autocomplete="off" value="{1}">
+        </div>
+        <div class="field-group hidden">
+            <input id="width" type="hidden" name="width" value="">
+            <label for="width">宽</label>
+        </div>
+        <div class="group">
+            <div class="checkbox">
+                <input id="table-heading-checkbox" class="checkbox" type="checkbox" name="heading" checked="checked" value="true">
+                <label for="table-heading-checkbox">首行设为表头</label>
+            </div>
+        </div>
+        <div class="group hidden">
+            <div class="checkbox">
+                <input id="table-equal-width-columns-checkbox" class="checkbox" type="checkbox" name="equal-width-columns" value="false">
+                <label for="table-equal-width-columns-checkbox">等宽列</label>
+            </div>
+        </div>
+    </form>
+</script>
+<input type="hidden" name="draftId" value="0" id="draftId"><input type="hidden" name="originalVersion" value="10" id="originalVersion">    <input type="hidden" name="atl_token" value="55925c099c1bdcc106a0765062240739c8ece748">
+</div></body></html>
