@@ -6,7 +6,7 @@ pprof是golang对于runtime运行时进行系统状态监控的工具。golang�
 
 #### 2.生成采样文件
 
-(1).封装pprof类库,参加`go-libs/pprof`
+(1).封装pprof类库,参见[go-libs/pprof](https://github.com/alwaysthanks/learning-docs/blob/master/go-libs/pprof/pprof.go)
 
 ```
 //cpu采样函数
@@ -116,18 +116,26 @@ X轴代表采样总量。从左到右并不代表时间变化，从左到右也�
 
 #### 5.一个问题
 
-- 若程序存在内存泄漏，如何进行定位?
+若程序存在内存泄漏，如何进行定位?
 
-  (1)首先关注是否是goroutine暴增, 若不是，则进行如下:
+(1) 首先关注是否是goroutine暴增, 若不是，则进行如下:
 
-  (2)嵌入内存采样代码进行执行，或者使用pprof-http接口相关命令，生成采样文件。
+(2) 嵌入内存采样代码进行执行，或者使用pprof-http接口相关命令，生成采样文件
 
-  (3)使用pprof工具top,list等分析内存分配，并可使用go-torch查看内存分配火焰图。重点关注内存大量分配的代码段, 这里注意内存泄漏通常出现在业务代码，所以重点先考虑业务代码层面, 然后在考虑三方类库。
+(3) 必要时可对可疑内存泄漏部分的代码段进行压测
 
-  (4)必要时可进行可疑内存泄漏部分的代码段压测。
+(4) 使用pprof工具`top`,`list`,`web`等命令分析内存分配，并可使用go-torch查看内存分配火焰图。
+
+- ` inuse_space` 用于查看当前主要分配的内存堆区
+- `alloc_objects` 用于查看累计生成堆对象的源头
+- `alloc_space`用于查看堆内存的累计分配，通过`web`查看内存堆积处
+
+<center>
+    <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191218105106.png">
+</center>
 
 
 
-参考:
+##### 参考:
 
 - https://www.cnblogs.com/li-peng/p/9391543.html
