@@ -9,13 +9,9 @@ pprof是golang对于runtime运行时进行系统状态监控的工具。golang�
 (1).封装pprof类库,参见[go-libs/pprof](https://github.com/alwaysthanks/learning-docs/blob/master/go-libs/pprof/pprof.go)
 
 ```
-//cpu采样函数
-StartCpuProf()
-StopCpuProf()
-//内存采样
-SaveMemProf()
-//goroutine数量采样
-SaveGoroutineProfile() 
+<center>
+      <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191222-01http-pool.png">
+</center>
 ```
 
 (2).嵌入代码用例等进行采样
@@ -131,7 +127,7 @@ X轴代表采样总量。从左到右并不代表时间变化，从左到右也�
 - `alloc_space`用于查看堆内存的累计分配，通过`web`查看内存堆积处
 
 <center>
-    <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191218105106.png">
+    <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191217-01pprof.png">
 </center>
 
 

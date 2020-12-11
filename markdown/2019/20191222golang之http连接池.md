@@ -9,9 +9,8 @@
 在http早期，每个http请求都要求打开一个tpc socket连接，并且使用一次之后就断开这个tcp连接。
 使用keep-alive可以改善这种状态，即在一次TCP连接中可以持续发送多份数据而不会断开连接。通过使用keep-alive机制，可以减少tcp连接建立次数，也意味着可以减少TIME_WAIT状态连接，以此提高性能和提高httpd服务器的吞吐率(更少的tcp连接意味着更少的系统内核调用,socket的accept()和close()调用)。
 <center>
-      <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191222180715.png">
+      <img src="https://github.com/alwaysthanks/learning-docs/blob/master/images/20191222-01http-pool.png">
 </center>
-
 在HTTP/1.0，为了实现client到web-server能支持长连接，必须在HTTP请求头里显示指定:
 `Connection:keep-alive`
 在HTTP/1.1，就默认是开启了keep-alive，要关闭keep-alive需要在HTTP请求头里显示指定:
